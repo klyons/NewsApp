@@ -2,16 +2,16 @@
 
 import requests
 import pandas as pd
+import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 
-#dictoinary for all updated dataframes
+#dictionary for all updated dataframes
 dataframes = {}
 
 def find_links(domain):
     # Send a GET request
     response = requests.get(domain)
-    
     if response.status_code == 200:
 
         # Parse the response text with BeautifulSoup
@@ -26,12 +26,12 @@ def find_links(domain):
             if url and 'http' in url:  # Check if it's a valid URL
                 #print(url)
                 retlinks.append(url)
+        print(retlinks)
         return retlinks
     else: 
         print("status code error in find_links")
 
 def create_dataframes():
-
     sources = {
         "Drudge_Report" : "https://www.drudgereport.com", 
         "Mother_Jones": "https://www.motherjones.com",
@@ -46,7 +46,7 @@ def create_dataframes():
     for name, url in sources.items():
         links = find_links(url)
         dataframes[name] = pd.DataFrame(links, columns = [name])
-
+        pdb.set_trace()
     return dataframes
 
 
@@ -66,7 +66,6 @@ def more_links(df):
 
 def valid_link(df):
     dfName = df.columns.tolist()[0]
-
     i = 0
 
     for value in df[dfName]:
@@ -85,13 +84,10 @@ def remove_duplicate(df):
 
 
 def text_blob(df):
-
     df = df.copy()
-
     if "stories" not in df.columns:
 
         df["stories"] = ""
-
     for i, link in enumerate(df.iloc[:, 0]):
         response = requests.get(link)
 
@@ -104,14 +100,16 @@ def text_blob(df):
             df.loc[i, "stories"] = str(blob)  
         else:
             print("status code error in text_blob")
-
     return df
 
 
 if __name__ == '__main__':
-
+    
+    
+    
     dataframes = create_dataframes()
 
+    pdb.set_trace()
     for name, df in dataframes.items():
         df = more_links(df)
         df = valid_link(df)
