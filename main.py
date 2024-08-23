@@ -31,24 +31,30 @@ def find_links(domain):
     else: 
         print("status code error in find_links")
 
+def get_website_name(url):
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc
+    website_name = domain.split('.')[1]  # Extract the main domain name
+    return website_name
+
 def create_dataframes():
     sources = {
-        "Drudge_Report" : "https://www.drudgereport.com", 
-        "Mother_Jones": "https://www.motherjones.com",
-        "BBC" : "https://www.bbc.com/", 
-        "MSNBC" : "https://www.msnbc.com/",
-        "CNN" : "https://www.cnn.com/",
-        "Fox_News" : "https://www.foxnews.com",
-        "News_Max" : "https://www.newsmax.com/"
+        "drudgereport": "https://www.drudgereport.com", 
+        "motherjones": "https://www.motherjones.com",
+        "bbc": "https://www.bbc.com/", 
+        "msnbc": "https://www.msnbc.com/",
+        "cnn": "https://www.cnn.com/",
+        "foxnews": "https://www.foxnews.com",
+        "newsmax": "https://www.newsmax.com/"
     }
 
-
+    dataframes = {}
     for name, url in sources.items():
         links = find_links(url)
-        dataframes[name] = pd.DataFrame(links, columns = [name])
-        pdb.set_trace()
+        filtered_links = [link for link in links if name in link]
+        dataframes[name] = pd.DataFrame(filtered_links, columns=[name])
+        print(dataframes[name])
     return dataframes
-
 
 
 def more_links(df):
@@ -104,9 +110,6 @@ def text_blob(df):
 
 
 if __name__ == '__main__':
-    
-    
-    
     dataframes = create_dataframes()
 
     pdb.set_trace()
