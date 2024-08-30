@@ -11,25 +11,28 @@ dataframes = {}
 
 def find_links(domain):
     # Send a GET request
-    response = requests.get(domain)
-    if response.status_code == 200:
 
-        # Parse the response text with BeautifulSoup
-        soup = BeautifulSoup(response.text, 'html.parser')
-    
-        # Find all 'a' tags (which define hyperlinks)
-        links = soup.find_all('a')
-        retlinks = []
-        # Extract href attribute from each link and print
-        for link in links:
-            url = link.get('href')
-            if url and 'http' in url:  # Check if it's a valid URL
-                #print(url)
-                retlinks.append(url)
-        print(retlinks)
-        return retlinks
-    else: 
-        print("status code error in find_links")
+    try:
+        
+        response = requests.get(domain)
+        if response.status_code == 200:
+
+            # Parse the response text with BeautifulSoup
+            soup = BeautifulSoup(response.text, 'html.parser')
+        
+            # Find all 'a' tags (which define hyperlinks)
+            links = soup.find_all('a')
+            retlinks = []
+            # Extract href attribute from each link and print
+            for link in links:
+                url = link.get('href')
+                if url and 'http' in url:  # Check if it's a valid URL
+                    #print(url)
+                    retlinks.append(url)
+            print(retlinks)
+            return retlinks
+    except:
+        print("try except error")
 
 def get_website_name(url):
     parsed_url = urlparse(url)
@@ -55,7 +58,6 @@ def create_dataframes():
         dataframes[name] = pd.DataFrame(filtered_links, columns=[name])
         print(dataframes[name])
     return dataframes
-
 
 def more_links(df):
     if df.shape[1] < 100:
