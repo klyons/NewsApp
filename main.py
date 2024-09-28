@@ -11,9 +11,7 @@ dataframes = {}
 
 def find_links(domain):
     # Send a GET request
-
     try:
-        
         response = requests.get(domain)
         if response.status_code == 200:
 
@@ -32,7 +30,7 @@ def find_links(domain):
             print(retlinks)
             return retlinks
     except:
-        print("try except error")
+        print("try except error response code error??")
 
 def get_website_name(url):
     parsed_url = urlparse(url)
@@ -110,12 +108,39 @@ def text_blob(df):
             print("status code error in text_blob")
     return df
 
+def parse_stories(df):
+    #find the header and the subheader
+    if "header" not in df.columns:
+        df["header"] = ""
+    if "tagline" not in df.columns:
+        df["tagline"] = ""
+    pdb.set_trace()
+    # i want the item in the columns []
+    for i, link in enumerate(df.iloc[0]):
+        response = requests.get(link)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Extract header
+            header = soup.find('h1')
+            if header:
+                df.loc[i, "header"] = header.get_text(strip=True)
+            
+            # Extract tagline
+            tagline = soup.find('h2')
+            if tagline:
+                df.loc[i, "tagline"] = tagline.get_text(strip=True)
+        else:
+            print(f"Failed to fetch {link}, status code: {response.status_code}")
+    
+
+            
 
 if __name__ == '__main__':
     dataframes = create_dataframes()
-
-    pdb.set_trace()
+    # dataframes is a dictionary of dataframes
     for name, df in dataframes.items():
+        parse_stories(df)
         df = more_links(df)
         df = valid_link(df)
         df = remove_duplicate(df)
