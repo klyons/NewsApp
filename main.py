@@ -112,7 +112,7 @@ def text_blob(df):
             print("status code error in text_blob")
     return df
 
-def parse_stories(df):
+def parse_stories_mother_jones(df):
     #find the header and the subheader
     if "header" not in df.columns:
         df["header"] = ""
@@ -137,22 +137,71 @@ def parse_stories(df):
         else:
             print(f"Failed to fetch {link}, status code: {response.status_code}")
     
-
+def parse_stories_drudge(df):
+    #find the header and the subheader
+    pdb.set_trace()
+    if "header" not in df.columns:
+        df["header"] = ""
+    if "tagline" not in df.columns:
+        df["tagline"] = ""
+    pdb.set_trace()
+    # i want the item in the columns []
+    for i, link in enumerate(df.iloc[0]):
+        response = requests.get(link)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Extract header
+            header = soup.find('h1')
+            if header:
+                df.loc[i, "header"] = header.get_text(strip=True)
+            
+            # Extract tagline
+            tagline = soup.find('h2')
+            if tagline:
+                df.loc[i, "tagline"] = tagline.get_text(strip=True)
+        else:
+            print(f"Failed to fetch {link}, status code: {response.status_code}")
+            
+def parse_stories_bbc(df):
+    #find the header and the subheader
+    pdb.set_trace()
+    if "header" not in df.columns:
+        df["header"] = ""
+    if "tagline" not in df.columns:
+        df["tagline"] = ""
+    pdb.set_trace()
+    # i want the item in the columns []
+    for i, link in enumerate(df.iloc[0]):
+        response = requests.get(link)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Extract header
+            header = soup.find('h1')
+            if header:
+                df.loc[i, "header"] = header.get_text(strip=True)
+            
+            # Extract tagline
+            tagline = soup.find('h2')
+            if tagline:
+                df.loc[i, "tagline"] = tagline.get_text(strip=True)
+        else:
+            print(f"Failed to fetch {link}, status code: {response.status_code}")
             
 
 if __name__ == '__main__':
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
     for name, df in dataframes.items():
-<<<<<<< HEAD
-        parse_stories(df)
-        df = more_links(df)
-=======
->>>>>>> b525a0d88346685de0d10949355eb27c999ff34b
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)
-        dataframes[name] = df
+        pdb.set_trace()
+        if name == 'drudgereport':
+            parse_stories_drudge(df)
+        if name == 'bbc':
+            parse_stories_bbc(df)
 
         print(df.head())
         print(df.shape[0])
