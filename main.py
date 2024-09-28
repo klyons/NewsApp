@@ -139,7 +139,6 @@ def parse_stories_mother_jones(df):
     
 def parse_stories_drudge(df):
     #find the header and the subheader
-    pdb.set_trace()
     if "header" not in df.columns:
         df["header"] = ""
     if "tagline" not in df.columns:
@@ -165,7 +164,7 @@ def parse_stories_drudge(df):
             
 def parse_stories_bbc(df):
     #find the header and the subheader
-    pdb.set_trace()
+
     if "header" not in df.columns:
         df["header"] = ""
     if "tagline" not in df.columns:
