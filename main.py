@@ -57,6 +57,7 @@ def create_dataframes():
         print(dataframes[name])
     return dataframes
 
+"""
 def more_links(df):
     if df.shape[1] < 100:
         new_rows = []  
@@ -68,7 +69,8 @@ def more_links(df):
             new_df = pd.DataFrame(new_rows, columns=df.columns)
             df = pd.concat([df, new_df], ignore_index=True)
     return df
-                
+
+"""               
 
 def valid_link(df):
     dfName = df.columns.tolist()[0]
@@ -103,6 +105,8 @@ def text_blob(df):
             text = soup.get_text()
 
             blob = TextBlob(text)
+            pdb.set_trace()
+            print(blob)
             df.loc[i, "stories"] = str(blob)  
         else:
             print("status code error in text_blob")
@@ -140,8 +144,11 @@ if __name__ == '__main__':
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
     for name, df in dataframes.items():
+<<<<<<< HEAD
         parse_stories(df)
         df = more_links(df)
+=======
+>>>>>>> b525a0d88346685de0d10949355eb27c999ff34b
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)
