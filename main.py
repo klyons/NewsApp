@@ -46,7 +46,10 @@ def create_dataframes():
         "msnbc": "https://www.msnbc.com/",
         "cnn": "https://www.cnn.com/",
         "foxnews": "https://www.foxnews.com",
-        "newsmax": "https://www.newsmax.com/"
+        "newsmax": "https://www.newsmax.com/",
+        "jpost": "https://www.jpost.com/",
+        "aljazeera": "https://www.aljazeera.com/",
+        "acociatedPress": "https://apnews.com/",
     }
 
     dataframes = {}
@@ -112,95 +115,34 @@ def text_blob(df):
             print("status code error in text_blob")
     return df
 
-def parse_stories_mother_jones(df):
-    #find the header and the subheader
-    if "header" not in df.columns:
-        df["header"] = ""
-    if "tagline" not in df.columns:
-        df["tagline"] = ""
-    pdb.set_trace()
-    # i want the item in the columns []
-    for i, link in enumerate(df.iloc[0]):
-        response = requests.get(link)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # Extract header
-            header = soup.find('h1')
-            if header:
-                df.loc[i, "header"] = header.get_text(strip=True)
-            
-            # Extract tagline
-            tagline = soup.find('h2')
-            if tagline:
-                df.loc[i, "tagline"] = tagline.get_text(strip=True)
-        else:
-            print(f"Failed to fetch {link}, status code: {response.status_code}")
-    
-def parse_stories_drudge(df):
-    #find the header and the subheader
-    if "header" not in df.columns:
-        df["header"] = ""
-    if "tagline" not in df.columns:
-        df["tagline"] = ""
-    pdb.set_trace()
-    # i want the item in the columns []
-    for i, link in enumerate(df.iloc[0]):
-        response = requests.get(link)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # Extract header
-            header = soup.find('h1')
-            if header:
-                df.loc[i, "header"] = header.get_text(strip=True)
-            
-            # Extract tagline
-            tagline = soup.find('h2')
-            if tagline:
-                df.loc[i, "tagline"] = tagline.get_text(strip=True)
-        else:
-            print(f"Failed to fetch {link}, status code: {response.status_code}")
-            
-def parse_stories_bbc(df):
-    #find the header and the subheader
 
-    if "header" not in df.columns:
-        df["header"] = ""
-    if "tagline" not in df.columns:
-        df["tagline"] = ""
-    pdb.set_trace()
-    # i want the item in the columns []
-    for i, link in enumerate(df.iloc[0]):
-        response = requests.get(link)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # Extract header
-            header = soup.find('h1')
-            if header:
-                df.loc[i, "header"] = header.get_text(strip=True)
-            
-            # Extract tagline
-            tagline = soup.find('h2')
-            if tagline:
-                df.loc[i, "tagline"] = tagline.get_text(strip=True)
-        else:
-            print(f"Failed to fetch {link}, status code: {response.status_code}")
-            
+parse_functions = {
+    'drudgereport': parse_stories_drudge,
+    'motherjones': parse_stories_motherjones,
+    'bbc': parse_stories_bbc,
+    'msnbc': parse_stories_msnbc,
+    'cnn': parse_stories_cnn,
+    'foxnews': parse_stories_foxnews,
+    'newsmax': parse_stories_newsmax,
+    'jpost': parse_stories_jpost,
+    'aljazeera': parse_stories_aljazeera,
+    'acociatedPress': parse_stories_ap
+}
 
 if __name__ == '__main__':
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
+    parser = Parser()
+    
     for name, df in dataframes.items():
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)
         pdb.set_trace()
-        if name == 'drudgereport':
-            parse_stories_drudge(df)
-        if name == 'bbc':
-            parse_stories_bbc(df)
+        # Call the corresponding parsing function if it exists
+        if name in parse_functions:
+            getattr(parser, parse_functions[name])(df)
+
 
         print(df.head())
         print(df.shape[0])
