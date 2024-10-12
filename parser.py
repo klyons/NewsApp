@@ -1,3 +1,9 @@
+import requests
+import pandas as pd
+import pdb
+from textblob import TextBlob
+from bs4 import BeautifulSoup
+
 #story parser
 class Paser():
     
@@ -35,11 +41,11 @@ class Paser():
 		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []
+
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
-				
 				# Extract header
 				header = soup.find('h1')
 				if header:
@@ -76,36 +82,72 @@ class Paser():
 				
 	def parse_stories_motherjones(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for Mother Jones
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_bbc(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for BBC
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for MSNBC
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_cnn(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for CNN
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_foxnews(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for Fox News
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_newsmax(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for Newsmax
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_jpost(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for Jerusalem Post
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_aljazeera(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for Al Jazeera
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
 
 	def parse_stories_ap(self, df):
 		df = self.create_columns(df)
-        # Your specific parsing logic for Associated Press
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
