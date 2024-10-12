@@ -74,3 +74,38 @@ class Paser():
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
 				
+	def parse_stories_motherjones(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for Mother Jones
+
+	def parse_stories_bbc(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for BBC
+
+	def parse_stories_msnbc(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for MSNBC
+
+	def parse_stories_cnn(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for CNN
+
+	def parse_stories_foxnews(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for Fox News
+
+	def parse_stories_newsmax(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for Newsmax
+
+	def parse_stories_jpost(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for Jerusalem Post
+
+	def parse_stories_aljazeera(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for Al Jazeera
+
+	def parse_stories_ap(self, df):
+		df = self.create_columns(df)
+        # Your specific parsing logic for Associated Press
