@@ -78,10 +78,6 @@ class Paser():
 		df = self.create_columns(df)
         # Your specific parsing logic for Mother Jones
 
-	def parse_stories_bbc(self, df):
-		df = self.create_columns(df)
-        # Your specific parsing logic for BBC
-
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
         # Your specific parsing logic for MSNBC
@@ -90,6 +86,7 @@ class Paser():
 		df = self.create_columns(df)
         # Your specific parsing logic for CNN
 
+	#get to fox news
 	def parse_stories_foxnews(self, df):
 		df = self.create_columns(df)
         # Your specific parsing logic for Fox News
@@ -108,4 +105,21 @@ class Paser():
 
 	def parse_stories_ap(self, df):
 		df = self.create_columns(df)
+		#find the header and the subheader
+		df = self.create_columns(df)
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
+				
+				# Extract header
+				header = soup.find('h1')
+				if header:
+					df.loc[i, "header"] = header.get_text(strip=True)
+				tagline = soup.find_all('p')
+				if tagline[0]:
+					df.loc[i, "tagline"] = tagline.get('id')
+					pdb.set_trace()
+    
         # Your specific parsing logic for Associated Press

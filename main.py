@@ -57,7 +57,6 @@ def create_dataframes():
         links = find_links(url)
         filtered_links = [link for link in links if name in link]
         dataframes[name] = pd.DataFrame(filtered_links, columns=[name])
-        print(dataframes[name])
     return dataframes
 
 """
@@ -109,7 +108,6 @@ def text_blob(df):
 
             blob = TextBlob(text)
             pdb.set_trace()
-            print(blob)
             df.loc[i, "stories"] = str(blob)  
         else:
             print("status code error in text_blob")
@@ -143,9 +141,6 @@ if __name__ == '__main__':
         if name in parse_functions:
             getattr(parser, parse_functions[name])(df)
 
-
-        print(df.head())
-        print(df.shape[0])
 
 """
 https://textblob.readthedocs.io/en/dev/
