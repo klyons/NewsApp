@@ -88,6 +88,16 @@ class Paser():
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
+				#find header
+				header = soup.find('h1')
+				if header:
+					df.loc[i, "header"] = header.get_text(strip=True)
+				
+				#find tagline
+				tagline = soup.find('h2')
+				if tagline:
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+
 	def parse_stories_bbc(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
