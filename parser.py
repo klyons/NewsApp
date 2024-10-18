@@ -154,6 +154,15 @@ class Paser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
+				# Extract header
+				header = soup.find('h1')
+				if header:
+					df.loc[i, "header"] = header.get_text(strip=True)
+				tagline = soup.find('ul')
+				if tagline:
+					first_li = tagline.find('li')
+					if first_li:
+						df.loc[i, "tagline"] = first_li.get_text(strip=True)
 
 	def parse_stories_ap(self, df):
 		df = self.create_columns(df)
@@ -164,14 +173,13 @@ class Paser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
-				
 				# Extract header
 				header = soup.find('h1')
 				if header:
 					df.loc[i, "header"] = header.get_text(strip=True)
 				tagline = soup.find_all('p')
 				if tagline[0]:
-					df.loc[i, "tagline"] = tagline.get('id')
-					pdb.set_trace()
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+
     
         # Your specific parsing logic for Associated Press
