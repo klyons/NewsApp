@@ -113,8 +113,10 @@ class Parser():
 				
 				#find tagline
 				tagline = soup.find('p')
+				if tagline: 
+					df.loc[i, "header"] = tagline[0].get_text(strip=True)
 				print("bbc tagline: " + str(tagline))
-
+				print(df)
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
