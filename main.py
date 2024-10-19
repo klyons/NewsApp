@@ -1,5 +1,9 @@
 #mailto: lyons.kelly@gmail.com
-
+'''
+possible transfer learning libraries:
+https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B
+https://huggingface.co/SamLowe/roberta-base-go_emotions
+'''
 import requests
 import pandas as pd
 import pdb
@@ -58,7 +62,6 @@ def create_dataframes():
         links = find_links(url)
         filtered_links = [link for link in links if name in link]
         dataframes[name] = pd.DataFrame(filtered_links, columns=[name])
-        print(dataframes[name])
     return dataframes
 
 """
@@ -110,7 +113,6 @@ def text_blob(df):
 
             blob = TextBlob(text)
             pdb.set_trace()
-            print(blob)
             df.loc[i, "stories"] = str(blob)  
         else:
             print("status code error in text_blob")
@@ -131,9 +133,24 @@ parse_functions = {
 }
 
 if __name__ == '__main__':
+    
+    parser = parser.Parser()
+    
+    parse_functions = {
+        #'drudgereport': parse_stories_drudge,
+        #'motherjones': parse_stories_motherjones,
+        #'bbc': parse_stories_bbc,
+        #'msnbc': parse_stories_msnbc,
+        #'cnn': parse_stories_cnn,
+        #'foxnews': parse_stories_foxnews,
+        #'newsmax': parse_stories_newsmax,
+        #'jpost': parse_stories_jpost,
+        #'aljazeera': parse_stories_aljazeera,
+        'acociatedPress': parser.parse_stories_ap
+    }
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
-    parser = Parser()
+    
     
     for name, df in dataframes.items():
         df = valid_link(df)
@@ -144,9 +161,6 @@ if __name__ == '__main__':
         if name in parse_functions:
             getattr(parser, parse_functions[name])(df)
 
-
-        print(df.head())
-        print(df.shape[0])
 
 """
 https://textblob.readthedocs.io/en/dev/

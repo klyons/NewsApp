@@ -5,7 +5,7 @@ from textblob import TextBlob
 from bs4 import BeautifulSoup
 
 #story parser
-class Paser():
+class Parser():
     
 	def __init__(self):
 		pass
@@ -132,6 +132,7 @@ class Paser():
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
+	#get to fox news
 	def parse_stories_foxnews(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -163,11 +164,32 @@ class Paser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
+				# Extract header
+				header = soup.find('h1')
+				if header:
+					df.loc[i, "header"] = header.get_text(strip=True)
+				tagline = soup.find('ul')
+				if tagline:
+					first_li = tagline.find('li')
+					if first_li:
+						df.loc[i, "tagline"] = first_li.get_text(strip=True)
 
 	def parse_stories_ap(self, df):
+		df = self.create_columns(df)
+		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
+				# Extract header
+				header = soup.find('h1')
+				if header:
+					df.loc[i, "header"] = header.get_text(strip=True)
+				tagline = soup.find_all('p')
+				if tagline[0]:
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+
+    
+        # Your specific parsing logic for Associated Press
