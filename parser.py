@@ -16,7 +16,7 @@ class Paser():
 		if "tagline" not in df.columns:
 			df["tagline"] = ""
 		return df
-
+	"""
 	def parse_stories_mother_jones(df):
 		#find the header and the subheader
 		df = self.create_columns(df)
@@ -36,7 +36,7 @@ class Paser():
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
-		
+	
 	def parse_stories_drudge(df):
 		#find the header and the subheader
 		df = self.create_columns(df)
@@ -79,7 +79,7 @@ class Paser():
 					pdb.set_trace()
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
-				
+	"""					
 	def parse_stories_motherjones(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -105,6 +105,16 @@ class Paser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
+
+				#find header
+				header = soup.find('h1')
+				if header:
+					df.loc[i, "header"] = header.get_text(strip=True)
+				
+				#find tagline
+				tagline = soup.find('p')
+				print("bbc tagline: " + str(tagline))
+
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
