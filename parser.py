@@ -5,7 +5,7 @@ from textblob import TextBlob
 from bs4 import BeautifulSoup
 
 #story parser
-class Paser():
+class Parser():
     
 	def __init__(self):
 		pass

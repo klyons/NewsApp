@@ -1,10 +1,15 @@
 #mailto: lyons.kelly@gmail.com
-
+'''
+possible transfer learning libraries:
+https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B
+https://huggingface.co/SamLowe/roberta-base-go_emotions
+'''
 import requests
 import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+import parser
 
 #dictionary for all updated dataframes
 dataframes = {}
@@ -114,23 +119,27 @@ def text_blob(df):
     return df
 
 
-parse_functions = {
-    'drudgereport': parse_stories_drudge,
-    'motherjones': parse_stories_motherjones,
-    'bbc': parse_stories_bbc,
-    'msnbc': parse_stories_msnbc,
-    'cnn': parse_stories_cnn,
-    'foxnews': parse_stories_foxnews,
-    'newsmax': parse_stories_newsmax,
-    'jpost': parse_stories_jpost,
-    'aljazeera': parse_stories_aljazeera,
-    'acociatedPress': parse_stories_ap
-}
+
 
 if __name__ == '__main__':
+    
+    parser = parser.Parser()
+    
+    parse_functions = {
+        #'drudgereport': parse_stories_drudge,
+        #'motherjones': parse_stories_motherjones,
+        #'bbc': parse_stories_bbc,
+        #'msnbc': parse_stories_msnbc,
+        #'cnn': parse_stories_cnn,
+        #'foxnews': parse_stories_foxnews,
+        #'newsmax': parse_stories_newsmax,
+        #'jpost': parse_stories_jpost,
+        #'aljazeera': parse_stories_aljazeera,
+        'acociatedPress': parser.parse_stories_ap
+    }
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
-    parser = Parser()
+    
     
     for name, df in dataframes.items():
         df = valid_link(df)
