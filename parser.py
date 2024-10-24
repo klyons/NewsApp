@@ -112,11 +112,12 @@ class Parser():
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				#find tagline
-				tagline = soup.find('p')
-				if tagline: 
+				tagline = soup.find_all('p')
+				if tagline[0]: 
 					df.loc[i, "header"] = tagline[0].get_text(strip=True)
-				print("bbc tagline: " + str(tagline))
-				print(df)
+
+				#print("bbc tagline: " + str(tagline))
+				#print(df)
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
@@ -126,6 +127,16 @@ class Parser():
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
+				#find header
+				header = soup.find("h1")
+				if header: 
+					df.loc[i, "header"] = header.get_text(strip=True)
+
+				#find tagline
+				tagline = soup.find(id = "article-dek")
+				if tagline: 
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+
 	def parse_stories_cnn(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -133,6 +144,16 @@ class Parser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
+
+				#find header
+				header = soup.find("h1")
+				if header: 
+					df.loc[i, "header"] = header.get_text(strip=True)
+
+				#find tagline 
+				tagline = soup.find_all("p")
+				if tagline[0]: 
+					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
 
 	#get to fox news
 	def parse_stories_foxnews(self, df):
@@ -143,6 +164,16 @@ class Parser():
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
+				#find header
+				header = soup.find("h1")
+				if header: 
+					df.loc[i, "header"] = header.get_text(strip=True)
+
+				#find tagline
+				tagline = soup.find("h2")
+				if tagline:
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+
 	def parse_stories_newsmax(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -150,6 +181,16 @@ class Parser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
+
+				#find header
+				header = soup.find("h1")
+				if header: 
+					df.loc[i, "header"] = header.get_text(strip=True)
+
+				#find tagline
+				tagline = soup.find_all("p") # in the div that has the id of mainArticleDiv
+				if tagline[0]:
+					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
 
 	def parse_stories_jpost(self, df):
 		df = self.create_columns(df)
@@ -159,6 +200,16 @@ class Parser():
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
+				#find header
+				header = soup.find("h1")
+				if header: 
+					df.loc[i, "header"] = header.get_text(strip=True)
+
+				#find tagline
+				tagline = soup.find("h2")
+				if tagline: 
+					df.loc[i, tagline] = tagline.get_text(strip=True)
+
 	def parse_stories_aljazeera(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -166,15 +217,18 @@ class Parser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
-				# Extract header
+
+				#find header
 				header = soup.find('h1')
 				if header:
 					df.loc[i, "header"] = header.get_text(strip=True)
-				tagline = soup.find('ul')
-				if tagline:
-					first_li = tagline.find('li')
-					if first_li:
-						df.loc[i, "tagline"] = first_li.get_text(strip=True)
+
+				#find tagline
+				tagline = soup.find('p')
+				if tagline[0]:
+					em_tagline = tagline[0].find('em')
+					if em_tagline:
+						df.loc[i, "tagline"] = em_tagline.get_text(strip=True)
 
 	def parse_stories_ap(self, df):
 		df = self.create_columns(df)
@@ -185,13 +239,16 @@ class Parser():
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
-				# Extract header
+				
+				#find header
 				header = soup.find('h1')
 				if header:
 					df.loc[i, "header"] = header.get_text(strip=True)
+				
+				#find tagline
 				tagline = soup.find_all('p')
 				if tagline[0]:
-					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
 
     
         # Your specific parsing logic for Associated Press
