@@ -113,6 +113,21 @@ def text_blob(df):
     return df
 
 
+<<<<<<< HEAD
+=======
+parse_functions = {
+    #'drudgereport': Parser.parse_stories_drudge,
+    'motherjones': parser.parse_stories_motherjones,
+    'bbc': parser.parse_stories_bbc,
+    #'msnbc': parser.parse_stories_msnbc,
+    #'cnn': parser.parse_stories_cnn,
+    #'foxnews': parser.parse_stories_foxnews,
+    #'newsmax': parser.parse_stories_newsmax,
+    #'jpost': parser.parse_stories_jpost,
+    #'aljazeera': parser.parse_stories_aljazeera,
+    #'acociatedPress': parser.parse_stories_ap
+}
+>>>>>>> 259e7bcf4d41730451a4f8387211c7c0efd5663d
 
 if __name__ == '__main__':
     
@@ -121,13 +136,21 @@ if __name__ == '__main__':
     parse_functions = {
         #'drudgereport': parser.parse_stories_drudge,
         #'motherjones': parser.parse_stories_motherjones,
+<<<<<<< HEAD
         #'bbc': parser.parse_stories_bbc,
+=======
+        'bbc': parser.parse_stories_bbc,
+>>>>>>> 259e7bcf4d41730451a4f8387211c7c0efd5663d
         #'msnbc': parser.parse_stories_msnbc,
         #'cnn': parser.parse_stories_cnn,
         #'foxnews': parser.parse_stories_foxnews,
         #'newsmax': parser.parse_stories_newsmax,
         #'jpost': parser.parse_stories_jpost,
+<<<<<<< HEAD
         #'aljazeera': parse_stories_aljazeera,
+=======
+        #'aljazeera': parser.parse_stories_aljazeera,
+>>>>>>> 259e7bcf4d41730451a4f8387211c7c0efd5663d
         'acociatedPress': parser.parse_stories_ap
     }
     dataframes = create_dataframes()
