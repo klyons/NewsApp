@@ -211,6 +211,7 @@ class Parser():
 					df.loc[i, tagline] = tagline.get_text(strip=True)
 
 	def parse_stories_aljazeera(self, df):
+		
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
@@ -231,7 +232,7 @@ class Parser():
 						df.loc[i, "tagline"] = em_tagline.get_text(strip=True)
 
 	def parse_stories_ap(self, df):
-		df = self.create_columns(df)
+		pdb.set_trace()
 		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []

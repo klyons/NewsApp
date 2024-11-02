@@ -32,7 +32,6 @@ def find_links(domain):
                 if url and 'http' in url:  # Check if it's a valid URL
                     #print(url)
                     retlinks.append(url)
-            print(retlinks)
             return retlinks
     except:
         print("try except error response code error??")
@@ -82,7 +81,6 @@ def more_links(df):
 def valid_link(df):
     dfName = df.columns.tolist()[0]
     i = 0
-
     for value in df[dfName]:
         if dfName in value:
             pass
@@ -91,12 +89,9 @@ def valid_link(df):
         i += 1
     return df
 
-
 def remove_duplicate(df):
     df = df.drop_duplicates(subset = df.columns.tolist()[0])
     return df
-
-
 
 def text_blob(df):
     df = df.copy()
@@ -112,30 +107,51 @@ def text_blob(df):
             text = soup.get_text()
 
             blob = TextBlob(text)
-            pdb.set_trace()
             df.loc[i, "stories"] = str(blob)  
         else:
             print("status code error in text_blob")
     return df
 
 
-
+<<<<<<< HEAD
+=======
+parse_functions = {
+    #'drudgereport': Parser.parse_stories_drudge,
+    'motherjones': parser.parse_stories_motherjones,
+    'bbc': parser.parse_stories_bbc,
+    #'msnbc': parser.parse_stories_msnbc,
+    #'cnn': parser.parse_stories_cnn,
+    #'foxnews': parser.parse_stories_foxnews,
+    #'newsmax': parser.parse_stories_newsmax,
+    #'jpost': parser.parse_stories_jpost,
+    #'aljazeera': parser.parse_stories_aljazeera,
+    #'acociatedPress': parser.parse_stories_ap
+}
+>>>>>>> 259e7bcf4d41730451a4f8387211c7c0efd5663d
 
 if __name__ == '__main__':
     
     parser = Parser()
     
     parse_functions = {
-    'drudgereport': "parse_stories_drudge",
-    'motherjones': "parse_stories_motherjones",
-    'bbc': "parse_stories_bbc",
-    'msnbc': "parse_stories_msnbc",
-    'cnn': "parse_stories_cnn",
-    'foxnews': "parse_stories_foxnews",
-    'newsmax': "parse_stories_newsmax",
-    'jpost': "parse_stories_jpost",
-    'aljazeera': "parse_stories_aljazeera",
-    'acociatedPress': "parse_stories_ap"
+        #'drudgereport': parser.parse_stories_drudge,
+        #'motherjones': parser.parse_stories_motherjones,
+<<<<<<< HEAD
+        #'bbc': parser.parse_stories_bbc,
+=======
+        'bbc': parser.parse_stories_bbc,
+>>>>>>> 259e7bcf4d41730451a4f8387211c7c0efd5663d
+        #'msnbc': parser.parse_stories_msnbc,
+        #'cnn': parser.parse_stories_cnn,
+        #'foxnews': parser.parse_stories_foxnews,
+        #'newsmax': parser.parse_stories_newsmax,
+        #'jpost': parser.parse_stories_jpost,
+<<<<<<< HEAD
+        #'aljazeera': parse_stories_aljazeera,
+=======
+        #'aljazeera': parser.parse_stories_aljazeera,
+>>>>>>> 259e7bcf4d41730451a4f8387211c7c0efd5663d
+        'acociatedPress': parser.parse_stories_ap
     }
 
     dataframes = create_dataframes()
@@ -146,7 +162,6 @@ if __name__ == '__main__':
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)
-        pdb.set_trace()
         # Call the corresponding parsing function if it exists
         if name in parse_functions:
             getattr(parser, parse_functions[name])(df)
