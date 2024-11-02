@@ -9,7 +9,7 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
-import parser
+from parser import *
 
 #dictionary for all updated dataframes
 dataframes = {}
@@ -119,35 +119,25 @@ def text_blob(df):
     return df
 
 
-parse_functions = {
-    #'drudgereport': Parser.parse_stories_drudge,
-    'motherjones': parser.parse_stories_motherjones,
-    'bbc': parser.parse_stories_bbc,
-    #'msnbc': parser.parse_stories_msnbc,
-    #'cnn': parser.parse_stories_cnn,
-    #'foxnews': parser.parse_stories_foxnews,
-    #'newsmax': parser.parse_stories_newsmax,
-    #'jpost': parser.parse_stories_jpost,
-    #'aljazeera': parser.parse_stories_aljazeera,
-    #'acociatedPress': parser.parse_stories_ap
-}
+
 
 if __name__ == '__main__':
     
-    parser = parser.Parser()
+    parser = Parser()
     
     parse_functions = {
-        #'drudgereport': parser.parse_stories_drudge,
-        #'motherjones': parser.parse_stories_motherjones,
-        'bbc': parser.parse_stories_bbc,
-        #'msnbc': parser.parse_stories_msnbc,
-        #'cnn': parser.parse_stories_cnn,
-        #'foxnews': parser.parse_stories_foxnews,
-        #'newsmax': parser.parse_stories_newsmax,
-        #'jpost': parser.parse_stories_jpost,
-        #'aljazeera': parser.parse_stories_aljazeera,
-        'acociatedPress': parser.parse_stories_ap
+    'drudgereport': "parse_stories_drudge",
+    'motherjones': "parse_stories_motherjones",
+    'bbc': "parse_stories_bbc",
+    'msnbc': "parse_stories_msnbc",
+    'cnn': "parse_stories_cnn",
+    'foxnews': "parse_stories_foxnews",
+    'newsmax': "parse_stories_newsmax",
+    'jpost': "parse_stories_jpost",
+    'aljazeera': "parse_stories_aljazeera",
+    'acociatedPress': "parse_stories_ap"
     }
+
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
     
