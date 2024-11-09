@@ -98,6 +98,11 @@ class Parser():
 				if tagline:
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
+				#find date
+				date = soup.find(class_ = "dateline")
+				print(date)
+
+
 	def parse_stories_bbc(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -253,3 +258,14 @@ class Parser():
 
     
         # Your specific parsing logic for Associated Press
+
+
+
+		"""
+		df.to_csv(data/{name}0.csv, index=False)
+		
+		
+		
+		
+		
+		"""
