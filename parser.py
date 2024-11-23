@@ -100,7 +100,7 @@ class Parser():
 
 				#find date
 				date = soup.find(class_ = "dateline")
-				print(date)
+				df.iloc[i, 'date'] = date	
 
 
 	def parse_stories_bbc(self, df):
