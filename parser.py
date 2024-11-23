@@ -100,7 +100,6 @@ class Parser():
 
 				#find date
 				date = soup.find(class_ = "dateline")
-				print(date)
 
 
 	def parse_stories_bbc(self, df):
@@ -121,8 +120,7 @@ class Parser():
 				if tagline[0]: 
 					df.loc[i, "header"] = tagline[0].get_text(strip=True)
 
-				#print("bbc tagline: " + str(tagline))
-				#print(df)
+				date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
@@ -142,6 +140,8 @@ class Parser():
 				if tagline: 
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
+				date = soup.find(class_ = "relative z-1")
+
 	def parse_stories_cnn(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -159,6 +159,11 @@ class Parser():
 				tagline = soup.find_all("p")
 				if tagline[0]: 
 					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
+
+				str = soup.find(class_ = "timestamp vossi-timestamp")
+				date = str.split(",")
+				date = date[-1]
+
 
 	#get to fox news
 	def parse_stories_foxnews(self, df):
@@ -178,6 +183,10 @@ class Parser():
 				tagline = soup.find("h2")
 				if tagline:
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+
+				if soup.find(class_ = "article_date"):
+					date = soup.find("time")
+						
 
 	def parse_stories_newsmax(self, df):
 		df = self.create_columns(df)
