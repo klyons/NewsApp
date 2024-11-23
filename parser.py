@@ -100,6 +100,7 @@ class Parser():
 
 				#find date
 				date = soup.find(class_ = "dateline")
+				df.iloc[i, 'date'] = date	
 
 
 	def parse_stories_bbc(self, df):
@@ -183,10 +184,6 @@ class Parser():
 				tagline = soup.find("h2")
 				if tagline:
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
-
-				if soup.find(class_ = "article_date"):
-					date = soup.find("time")
-						
 
 	def parse_stories_newsmax(self, df):
 		df = self.create_columns(df)
