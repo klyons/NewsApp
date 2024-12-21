@@ -95,6 +95,9 @@ def remove_duplicate(df):
 
 def text_blob(df):
     df = df.copy()
+    if "dates" not in df.columns:
+
+        df["dates"] = ""
     if "stories" not in df.columns:
 
         df["stories"] = ""
