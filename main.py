@@ -141,6 +141,8 @@ if __name__ == '__main__':
         # Call the corresponding parsing function if it exists
         if name in parse_functions:
             getattr(parser, parse_functions[name])(df)
+            print(df.head(2), "\n", getattr)
+        df.to_csv(f'data/{name}.csv', index=False)
 
 
 """
