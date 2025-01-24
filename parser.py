@@ -3,6 +3,7 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+from RAG.py import *
 
 #story parser
 class Parser():

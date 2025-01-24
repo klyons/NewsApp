@@ -10,6 +10,7 @@ import nest_asyncio
 import requests
 import os
 
+
 from llama_parse import LlamaParse
 #nest_asyncio.apply()
 from llama_index import SimpleDirectoryReader
@@ -57,9 +58,6 @@ def q(query1, **kwargs):
 
 	#print("GPT-3.5 Turbo")
 	#print(str(response))
-
-
-
 
 
 
