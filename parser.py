@@ -122,12 +122,8 @@ class Parser():
 					df.loc[i, "header"] = tagline[0].get_text(strip=True)
 
 				date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
-<<<<<<< HEAD
-				df.iloc[i, 'date'] = date	
-=======
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
->>>>>>> d799081cde7f6e94cd2bf5094420f49c3b462e09
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
@@ -148,12 +144,8 @@ class Parser():
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
 				date = soup.find(class_ = "relative z-1")
-<<<<<<< HEAD
-				df.iloc[i, 'date'] = date	
-=======
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
->>>>>>> d799081cde7f6e94cd2bf5094420f49c3b462e09
 
 	def parse_stories_cnn(self, df):
 		df = self.create_columns(df)
@@ -175,14 +167,9 @@ class Parser():
 
 				str = soup.find(class_ = "timestamp vossi-timestamp")
 				date = str.split(",")
-<<<<<<< HEAD
-				date = date[-1]
-				df.iloc[i, 'date'] = date	
-=======
 				date = date[-2] + date[-1]
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
->>>>>>> d799081cde7f6e94cd2bf5094420f49c3b462e09
 
 
 	#get to fox news
