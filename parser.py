@@ -3,6 +3,8 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+from RAG.py import *
+
 
 #story parser
 class Parser():
@@ -100,7 +102,9 @@ class Parser():
 
 				#find date
 				date = soup.find(class_ = "dateline")
-				df.iloc[i, 'date'] = date.get_text()		
+				df.iloc[i, 'date'] = date.get_text()
+
+		df.to_csv('motherjones.csv', index=False, mode='a', header=False)  		
 
 
 	def parse_stories_bbc(self, df):
@@ -123,7 +127,9 @@ class Parser():
 
 				date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()	
+					df.iloc[i, 'date'] = date.get_text()
+
+		df.to_csv('bbc.csv', index=False, mode='a', header=False) 	
 
 	def parse_stories_msnbc(self, df):
 		df = self.create_columns(df)
@@ -146,6 +152,8 @@ class Parser():
 				date = soup.find(class_ = "relative z-1")
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
+
+		df.to_csv('msnbc.csv', index=False, mode='a', header=False) 
 
 	def parse_stories_cnn(self, df):
 		df = self.create_columns(df)
@@ -171,6 +179,8 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
+		df.to_csv('cnn.csv', index=False, mode='a', header=False) 
+
 
 	#get to fox news
 	def parse_stories_foxnews(self, df):
@@ -193,7 +203,9 @@ class Parser():
 
 				date = soup.find(class_ = "article-date")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()		
+					df.iloc[i, 'date'] = date.get_text()
+
+		df.to_csv('foxnews.csv', index=False, mode='a', header=False) 		
 
 	def parse_stories_newsmax(self, df):
 		df = self.create_columns(df)
@@ -216,6 +228,8 @@ class Parser():
 				date = soup.find(class_ = "artPgDate")
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
+
+		df.to_csv('newsmax.csv', index=False, mode='a', header=False) 
 
 				
 
@@ -241,7 +255,9 @@ class Parser():
 
 				date = soup.find(class_ = "updated-date-date")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()		
+					df.iloc[i, 'date'] = date.get_text()	
+
+		df.to_csv('jpost.csv', index=False, mode='a', header=False) 	
 
 	def parse_stories_aljazeera(self, df):
 		
@@ -268,6 +284,8 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
+		df.to_csv('aljazeera.csv', index=False, mode='a', header=False) 
+
 	def parse_stories_ap(self, df):
 		pdb.set_trace()
 		#find the header and the subheader
@@ -293,13 +311,15 @@ class Parser():
 				if date: 
 					df.iloc[i, 'date'] = date.get_text()
 
+		df.to_csv('ap.csv', index=False, mode='a', header=False) 
+
     
         # Your specific parsing logic for Associated Press
 
 
 
 		"""
-		df.to_csv(data/{name}0.csv, index=False)
+		
 		
 		
 		
