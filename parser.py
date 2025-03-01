@@ -249,7 +249,7 @@ class Parser():
 				if rag.query_headlines(header, tagline):
 
 
-					date = soup.find(class_ = "updated-date-date")
+				date = soup.find(class_ = "updated-date-date")
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
