@@ -44,7 +44,7 @@ def get_website_name(url):
 
 def create_dataframes():
     sources = {
-        "drudgereport": "https://www.drudgereport.com", 
+        #"drudgereport": "https://www.drudgereport.com", 
         "motherjones": "https://www.motherjones.com",
         "bbc": "https://www.bbc.com/", 
         "msnbc": "https://www.msnbc.com/",
@@ -121,15 +121,15 @@ if __name__ == '__main__':
     
     parse_functions = {
         #'drudgereport': parser.parse_stories_drudge,
-        #'motherjones': parser.parse_stories_motherjones,
-        'bbc': 'parse_stories_bbc',
-        #'msnbc': parser.parse_stories_msnbc,
-        #'cnn': parser.parse_stories_cnn,
-        #'foxnews': parser.parse_stories_foxnews,
-        #'newsmax': parser.parse_stories_newsmax,
-        #'jpost': parser.parse_stories_jpost,
-        #'aljazeera': parser.parse_stories_aljazeera,
-        'acociatedPress': 'parse_stories_ap'
+        'motherjones': parser.parse_motherjones,
+        'bbc': parser.parse_bbc,
+        'msnbc': parser.parse_msnbc,
+        #'cnn': parser.parse_cnn,
+        #'foxnews': parser.parse_foxnews,
+        #'newsmax': parser.parse_newsmax,
+        #'jpost': parser.parse_jpost,
+        #'aljazeera': parser.parse_aljazeera,
+        #'acociatedPress': 'parse_stories_ap'
     }
     
     #add dates to 

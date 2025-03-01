@@ -3,7 +3,7 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
-from RAG.py import *
+#from RAG.py import *
 
 
 #story parser
@@ -59,8 +59,8 @@ class Parser():
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
-				
-	def parse_stories_bbc(df):
+	"""			
+	def parse_bbc(df):
 		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -81,8 +81,8 @@ class Parser():
 					pdb.set_trace()
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
-	"""					
-	def parse_stories_motherjones(self, df):
+						
+	def parse_motherjones(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
@@ -107,7 +107,7 @@ class Parser():
 		df.to_csv('motherjones.csv', index=False, mode='a', header=False)  		
 
 
-	def parse_stories_bbc(self, df):
+	def parse_bbc(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
@@ -131,7 +131,7 @@ class Parser():
 
 		df.to_csv('bbc.csv', index=False, mode='a', header=False) 	
 
-	def parse_stories_msnbc(self, df):
+	def parse_msnbc(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
@@ -155,7 +155,7 @@ class Parser():
 
 		df.to_csv('msnbc.csv', index=False, mode='a', header=False) 
 
-	def parse_stories_cnn(self, df):
+	def parse_cnn(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
@@ -167,12 +167,10 @@ class Parser():
 				header = soup.find("h1")
 				if header: 
 					df.loc[i, "header"] = header.get_text(strip=True)
-
 				#find tagline 
 				tagline = soup.find_all("p")
 				if tagline[0]: 
 					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
-
 				str = soup.find(class_ = "timestamp vossi-timestamp")
 				date = str.split(",")
 				date = date[-2] + date[-1]
@@ -183,19 +181,17 @@ class Parser():
 
 
 	#get to fox news
-	def parse_stories_foxnews(self, df):
+	def parse_foxnews(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
-
 				#find header
 				header = soup.find("h1")
 				if header: 
 					df.loc[i, "header"] = header.get_text(strip=True)
-
 				#find tagline
 				tagline = soup.find("h2")
 				if tagline:
@@ -207,7 +203,7 @@ class Parser():
 
 		df.to_csv('foxnews.csv', index=False, mode='a', header=False) 		
 
-	def parse_stories_newsmax(self, df):
+	def parse_newsmax(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
