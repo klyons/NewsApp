@@ -1,22 +1,19 @@
 #mailto: lyons.kelly@gmail.com
-'''
-possible transfer learning libraries:
-https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B
-https://huggingface.co/SamLowe/roberta-base-go_emotions
-'''
+
 import requests
 import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
-from parser import *
 
 #dictionary for all updated dataframes
 dataframes = {}
 
 def find_links(domain):
     # Send a GET request
+
     try:
+        
         response = requests.get(domain)
         if response.status_code == 200:
 
@@ -32,9 +29,10 @@ def find_links(domain):
                 if url and 'http' in url:  # Check if it's a valid URL
                     #print(url)
                     retlinks.append(url)
+            print(retlinks)
             return retlinks
     except:
-        print("try except error response code error??")
+        print("try except error")
 
 def get_website_name(url):
     parsed_url = urlparse(url)
@@ -44,16 +42,13 @@ def get_website_name(url):
 
 def create_dataframes():
     sources = {
-        #"drudgereport": "https://www.drudgereport.com", 
+        "drudgereport": "https://www.drudgereport.com", 
         "motherjones": "https://www.motherjones.com",
         "bbc": "https://www.bbc.com/", 
         "msnbc": "https://www.msnbc.com/",
         "cnn": "https://www.cnn.com/",
         "foxnews": "https://www.foxnews.com",
-        "newsmax": "https://www.newsmax.com/",
-        "jpost": "https://www.jpost.com/",
-        "aljazeera": "https://www.aljazeera.com/",
-        "acociatedPress": "https://apnews.com/",
+        "newsmax": "https://www.newsmax.com/"
     }
 
     dataframes = {}
@@ -61,9 +56,9 @@ def create_dataframes():
         links = find_links(url)
         filtered_links = [link for link in links if name in link]
         dataframes[name] = pd.DataFrame(filtered_links, columns=[name])
+        print(dataframes[name])
     return dataframes
 
-"""
 def more_links(df):
     if df.shape[1] < 100:
         new_rows = []  
@@ -75,12 +70,12 @@ def more_links(df):
             new_df = pd.DataFrame(new_rows, columns=df.columns)
             df = pd.concat([df, new_df], ignore_index=True)
     return df
-
-"""               
+                
 
 def valid_link(df):
     dfName = df.columns.tolist()[0]
     i = 0
+
     for value in df[dfName]:
         if dfName in value:
             pass
@@ -89,15 +84,15 @@ def valid_link(df):
         i += 1
     return df
 
+
 def remove_duplicate(df):
     df = df.drop_duplicates(subset = df.columns.tolist()[0])
     return df
 
+
+
 def text_blob(df):
     df = df.copy()
-    if "dates" not in df.columns:
-
-        df["dates"] = ""
     if "stories" not in df.columns:
 
         df["stories"] = ""
@@ -115,38 +110,20 @@ def text_blob(df):
             print("status code error in text_blob")
     return df
 
+
 if __name__ == '__main__':
-    
-    parser = Parser()
-    
-    parse_functions = {
-        #'drudgereport': parser.parse_stories_drudge,
-        'motherjones': parser.parse_motherjones,
-        'bbc': parser.parse_bbc,
-        'msnbc': parser.parse_msnbc,
-        #'cnn': parser.parse_cnn,
-        #'foxnews': parser.parse_foxnews,
-        #'newsmax': parser.parse_newsmax,
-        #'jpost': parser.parse_jpost,
-        #'aljazeera': parser.parse_aljazeera,
-        #'acociatedPress': 'parse_stories_ap'
-    }
-    
-    #add dates to 
     dataframes = create_dataframes()
-    # dataframes is a dictionary of dataframes
-    
-    
+
+    pdb.set_trace()
     for name, df in dataframes.items():
+        df = more_links(df)
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)
-        # Call the corresponding parsing function if it exists
-        if name in parse_functions:
-            getattr(parser, parse_functions[name])(df)
-            print(df.head(2), "\n", getattr)
-        df.to_csv(f'data/{name}.csv', index=False)
+        dataframes[name] = df
 
+        print(df.head())
+        print(df.shape[0])
 
 """
 https://textblob.readthedocs.io/en/dev/
