@@ -52,7 +52,7 @@ def wordcloud_gen(name):
                 	stopwords = stopwords,
                 	min_font_size = 10).generate(comment_words)
      
-	file = read_csv_file("text.csv")
+	file = read_csv_file("/Users/sirikelshikar/workspace/NewsApp/text.csv")
 
 	plt = wordcloud_gen(file)
 	plt.figure(figsize = (8, 8), facecolor = None)

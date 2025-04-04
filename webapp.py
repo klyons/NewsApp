@@ -4,31 +4,41 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
+import random
+import requests
+import sentiment_analysis
+
+def polar_analysis(url):
+	response = requests.get(url)
+	if response.status_code == 200:
+		return random.randint(1,7)
 
 
+def slider():
+	polar_dictionary = { 1 : "Strong Liberal", 
+			2: "Liberal",
+			3: "Libral Leaner",
+			4: "Independent",  	
+			5: "Conservative Leaner",
+			6: "Conservative",
+			7: "Strong Conservative"  
+	}
 
-st.markdown("<style>h1{text-align: center;}</style>", unsafe_allow_html=True)
-st.title("Welcome to _:violet[Newsapp]_!")
+	value = st.slider("Select a Polarity:", min_value=1, max_value=7, value=polar_analysis("https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B"), step=1)
+	st.write(f"Your article is: {polar_dictionary[value]} on the polarity scale")
 
 
+def text_on_screen(): 
+    #title
+	st.markdown("<style>h1{text-align: center;}</style>", unsafe_allow_html=True)
+	st.title("Welcome to _:violet[Newsapp]_!")
+      
+    #url text box
+	given_url = st.text_area("Please provide the URL you are analyzing").strip()
+      
+	if st.button("Submit") and len(given_url) > 0:
+		slider()
 
-st.markdown("""
-<style>
-    /* Change slider color from red to black */
-    .stSlider [data-baseweb="slider"] .WebkitProgressBar {
-        background-color: black !important;
-    }
-    
-    /* This changes the slider thumb color to match */
-    .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"] {
-        background-color: black !important;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# Create a slider with range 1-7 and step size of 1
-value = st.slider("Select a value", min_value=1, max_value=7, value=4, step=1)
-st.write(f"The selected value is: {value}")
 
 def read_csv_file(file_path):
     """
@@ -88,3 +98,10 @@ def wordcloud_gen(name):
 
 	plt.show()
 	return wordcloud
+
+
+def main():
+    text_on_screen()
+
+if __name__ == "__main__":
+      main()
