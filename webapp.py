@@ -6,26 +6,57 @@ import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import random
 import requests
-from sentiment_analysis import analyze_sent
+#from sentiment_analysis import analyze_sent
+import math
+from textblob import TextBlob
+from bs4 import BeautifulSoup
 
-def polar_analysis(url):
-	response = requests.get(url)
-	if response.status_code == 200:
-		return random.randint(1,7)
+def analyze_sent(url):
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        text = soup.get_text()
+
+        blob = TextBlob(text)
+        sentiment = blob.sentiment
+        print("Sentiment:", sentiment)
+        return sentiment.polarity  # ✅ Just return the polarity (float between -1 and 1)
+    else:
+        print("cannot fetch")
+        return 0
 
 
-def slider():
-	polar_dictionary = { -1 : "Strong Liberal", 
-			-2/3: "Liberal",
-			-1/3: "Libral Leaner",
-			0: "Independent",  	
-			1/3: "Conservative Leaner",
-			2/3: "Conservative",
-			1: "Strong Conservative"  
-	}
+def slider(url):
+    steps = [-1, -2/3, -1/3, 0, 1/3, 2/3, 1]
+    polar_dictionary = {
+        -1: "Strong Liberal", 
+        -2/3: "Liberal",
+        -1/3: "Liberal Leaner",
+        0: "Independent",  	
+        1/3: "Conservative Leaner",
+        2/3: "Conservative",
+        1: "Strong Conservative"  
+    }
 
-	value = st.slider("Select a Polarity:", min_value=1, max_value=7, value= analyze_sent("https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B"), step=1)
-	st.write(f"Your article is: {(polar_dictionary[value])*3 + 4} on the polarity scale")
+    score = analyze_sent(url)
+    st.write(f"DEBUG: analyze_sent returned {score}")
+
+    # Debug raw score value before rounding
+    raw_value = score * 3 + 4  # calculate raw value
+
+    # Display raw value before rounding
+    st.write(f"DEBUG: Raw value before rounding: {raw_value}")
+
+    # Now round the value for slider
+    slide_num = round(raw_value)  # round for slider to get integer value
+
+    value = st.slider("Polarity:", 1, 7, value=slide_num, step=1)
+
+    polarity_score = steps[value - 1]
+    label = polar_dictionary[polarity_score]
+    st.write(f"Your article is: {label} on the polarity scale")
+      
 
 
 def text_on_screen(): 
@@ -37,7 +68,17 @@ def text_on_screen():
 	given_url = st.text_area("Please provide the URL you are analyzing").strip()
       
 	if st.button("Submit") and len(given_url) > 0:
-		slider()
+		slider(given_url)
+
+
+
+
+
+
+
+
+
+
 
 
 def read_csv_file(file_path):

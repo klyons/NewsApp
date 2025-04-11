@@ -8,13 +8,10 @@ import requests
 # requests/bs4
 
 
-def analyze_sent():
-  # 1. User input
-  userLink = input("Enter a link to a review: ")
-
-  response = requests.get(userLink)
-
+def analyze_sent(url):
   # 2. Fetch then parse data
+  response = requests.get(url)
+
   if response.status_code == 200:
     soup = BeautifulSoup(response.content, 'html.parser')
     text = soup.get_text()
@@ -29,6 +26,8 @@ def analyze_sent():
     # Analyze sentiment
     sentiment = blob.sentiment
     print(sentiment)
+    return sentiment
 
   else:
     print("cannot fetch")
+    return None
