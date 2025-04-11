@@ -6,7 +6,7 @@ import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import random
 import requests
-import sentiment_analysis
+from sentiment_analysis import analyze_sent
 
 def polar_analysis(url):
 	response = requests.get(url)
@@ -15,17 +15,17 @@ def polar_analysis(url):
 
 
 def slider():
-	polar_dictionary = { 1 : "Strong Liberal", 
-			2: "Liberal",
-			3: "Libral Leaner",
-			4: "Independent",  	
-			5: "Conservative Leaner",
-			6: "Conservative",
-			7: "Strong Conservative"  
+	polar_dictionary = { -1 : "Strong Liberal", 
+			-2/3: "Liberal",
+			-1/3: "Libral Leaner",
+			0: "Independent",  	
+			1/3: "Conservative Leaner",
+			2/3: "Conservative",
+			1: "Strong Conservative"  
 	}
 
-	value = st.slider("Select a Polarity:", min_value=1, max_value=7, value=polar_analysis("https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B"), step=1)
-	st.write(f"Your article is: {polar_dictionary[value]} on the polarity scale")
+	value = st.slider("Select a Polarity:", min_value=1, max_value=7, value= analyze_sent("https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B"), step=1)
+	st.write(f"Your article is: {(polar_dictionary[value])*3 + 4} on the polarity scale")
 
 
 def text_on_screen(): 

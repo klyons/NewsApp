@@ -7,26 +7,28 @@ import requests
 # textblob -> NLP library/module
 # requests/bs4
 
-# 1. User input
-userLink = input("Enter a link to a review: ")
 
-response = requests.get(userLink)
+def analyze_sent():
+  # 1. User input
+  userLink = input("Enter a link to a review: ")
 
-# 2. Fetch then parse data
-if response.status_code == 200:
-  soup = BeautifulSoup(response.content, 'html.parser')
-  text = soup.get_text()
+  response = requests.get(userLink)
 
-  blob = TextBlob(text)
-  print(type(blob))
-  #blob_class = 
+  # 2. Fetch then parse data
+  if response.status_code == 200:
+    soup = BeautifulSoup(response.content, 'html.parser')
+    text = soup.get_text()
 
-  # polarity: -1 to 1
-  # subjectivity: 0 to 1
+    blob = TextBlob(text)
+    print(type(blob))
+    #blob_class = 
 
-  # Analyze sentiment
-  sentiment = blob.sentiment
-  print(sentiment)
+    # polarity: -1 to 1
+    # subjectivity: 0 to 1
 
-else:
-  print("cannot fetch")
+    # Analyze sentiment
+    sentiment = blob.sentiment
+    print(sentiment)
+
+  else:
+    print("cannot fetch")
