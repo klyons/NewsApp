@@ -119,23 +119,17 @@ if __name__ == '__main__':
     
     parser = Parser()
     
-    parse_functions = {
-        #'drudgereport': parser.parse_stories_drudge,
-        'motherjones': parser.parse_motherjones,
-        'bbc': parser.parse_bbc,
-        'msnbc': parser.parse_msnbc,
-        #'cnn': parser.parse_cnn,
-        #'foxnews': parser.parse_foxnews,
-        #'newsmax': parser.parse_newsmax,
-        #'jpost': parser.parse_jpost,
-        #'aljazeera': parser.parse_aljazeera,
-        #'acociatedPress': 'parse_stories_ap'
-    }
-    
-    #add dates to 
+    parer.parse_stories_mother_jones()
+    parser.parse_bbc()
+    parser.parse_stories_drudge()
+    parser.parse_stories_cnn()
+    parser.parse_stories_foxnews()
+    parser.parse_stories_newsmax()
+    parser.parse_stories_jpost()
+    parser.parse_stories_aljazeera()
+    parser.parse_stories_acociatedPress()
     dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
-    
     
     for name, df in dataframes.items():
         df = valid_link(df)
