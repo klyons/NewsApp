@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import pdb, csv
+# https://networkx.org/documentation/stable/auto_examples/algorithms/plot_betweenness_centrality.html#sphx-glr-auto-examples-algorithms-plot-betweenness-centrality-py
 
 
 def read_csv_file(file_path):
@@ -54,7 +55,7 @@ def wordcloud_gen():
                 	stopwords = stopwords,
                 	min_font_size = 10).generate(name)
      
-	#file = read_csv_file("/Users/sirikelshikar/workspace/NewsApp/text.csv")
+	file = read_csv_file("text.csv")
 
 	plt = wordcloud_gen()
 	plt.figure(figsize = (8, 8), facecolor = None)
