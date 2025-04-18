@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 class Parser():
     
 	def __init__(self):
-		pass
+		self.print = False
 
 	def create_columns(self, df):
 		if "header" not in df.columns:
@@ -72,13 +72,17 @@ class Parser():
 				# Extract header
 				header = soup.find('h1')
 				if header:
+					if self.print:
+						print(header.get_text(strip=True))
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				# Extract tagline
 				tagline = soup.find_all('p')
 				if tagline:
+					if self.print:
+						print(tagline[0].get_text(strip=True))
 					df.loc[i, "tagline"] = tagline.get('id')
-					pdb.set_trace()
+
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
 						
@@ -87,17 +91,22 @@ class Parser():
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
+			pdb.set_trace()
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
 				#find header
 				header = soup.find('h1')
 				if header:
+					if self.print:
+						print(header.get_text(strip=True))
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				#find tagline
 				tagline = soup.find('h2')
 				if tagline:
+					if self.print:
+						print(tagline.get_text(strip=True))
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
 				#find date
@@ -249,7 +258,10 @@ class Parser():
      
 				if rag.query_headlines(header, tagline):
 					date = soup.find(class_ = "updated-date-date")
+<<<<<<< HEAD
      
+=======
+>>>>>>> 79ab9cee475d6f2aa1ce7e72d00ceba8ab765609
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
@@ -314,11 +326,9 @@ class Parser():
 
 
 
-		"""
-		
-		
-		
-		
-		
-		
-		"""
+if __name__ == '__main__':
+	
+	parser = Parser()
+	
+	parser.parse_bbc()
+    

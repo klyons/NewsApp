@@ -43,41 +43,13 @@ def get_website_name(url):
     website_name = domain.split('.')[1]  # Extract the main domain name
     return website_name
 
-def create_dataframes():
-    sources = {
-        #"drudgereport": "https://www.drudgereport.com", 
-        "motherjones": "https://www.motherjones.com",
-        "bbc": "https://www.bbc.com/", 
-        "msnbc": "https://www.msnbc.com/",
-        "cnn": "https://www.cnn.com/",
-        "foxnews": "https://www.foxnews.com",
-        "newsmax": "https://www.newsmax.com/",
-        "jpost": "https://www.jpost.com/",
-        "aljazeera": "https://www.aljazeera.com/",
-        "acociatedPress": "https://apnews.com/",
-    }
-
+def create_dataframes(sources):
     dataframes = {}
     for name, url in sources.items():
         links = find_links(url)
         filtered_links = [link for link in links if name in link]
         dataframes[name] = pd.DataFrame(filtered_links, columns=[name])
-    return dataframes
-
-"""
-def more_links(df):
-    if df.shape[1] < 100:
-        new_rows = []  
-        for link in df.iloc[:, 0]:  
-            extra = find_links(link)
-            new_rows.extend(extra)  
-        
-        if new_rows:
-            new_df = pd.DataFrame(new_rows, columns=df.columns)
-            df = pd.concat([df, new_df], ignore_index=True)
-    return df
-
-"""               
+    return dataframes     
 
 def valid_link(df):
     dfName = df.columns.tolist()[0]
@@ -116,27 +88,37 @@ def text_blob(df):
             print("status code error in text_blob")
     return df
 
+sources = {
+        #"drudgereport": "https://www.drudgereport.com", 
+        "motherjones": "https://www.motherjones.com",
+        "bbc": "https://www.bbc.com/", 
+        "msnbc": "https://www.msnbc.com/",
+        "cnn": "https://www.cnn.com/",
+        "foxnews": "https://www.foxnews.com",
+        "newsmax": "https://www.newsmax.com/",
+        "jpost": "https://www.jpost.com/",
+        "aljazeera": "https://www.aljazeera.com/",
+        "acociatedPress": "https://apnews.com/",
+    }
+
 if __name__ == '__main__':
     
+    dataframes = create_dataframes(sources)
+    pdb.set_trace()
+    
     parser = Parser()
+    #  ['motherjones', 'bbc', 'msnbc', 'cnn', 'foxnews', 'newsmax', 'jpost', 'aljazeera', 'acociatedPress']
+    df_mj = parser.parse_stories_mother_jones(dataframes['motherjones'])
+    parser.parse_bbc(dataframes['bbc'])
+    # parser.parse_stories_drudge(dataframes)
+    parser.parse_stories_cnn(dataframes['cnn'])
+    parser.parse_stories_foxnews(dataframes['foxnews'])
+    parser.parse_stories_newsmax(dataframes['newsmax'])
+    parser.parse_stories_jpost(dataframes['jpost'])
+    parser.parse_stories_aljazeera(dataframes['aljazeera'])
+    parser.parse_stories_acociatedPress(dataframes['acociatedPress'])
     
-    parse_functions = {
-        #'drudgereport': parser.parse_stories_drudge,
-        'motherjones': parser.parse_motherjones,
-        'bbc': parser.parse_bbc,
-        'msnbc': parser.parse_msnbc,
-        #'cnn': parser.parse_cnn,
-        #'foxnews': parser.parse_foxnews,
-        #'newsmax': parser.parse_newsmax,
-        #'jpost': parser.parse_jpost,
-        #'aljazeera': parser.parse_aljazeera,
-        #'acociatedPress': 'parse_stories_ap'
-    }
-    
-    #add dates to 
-    dataframes = create_dataframes()
     # dataframes is a dictionary of dataframes
-    
     
     for name, df in dataframes.items():
         pdb.set_trace()

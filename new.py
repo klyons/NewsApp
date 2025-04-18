@@ -55,7 +55,7 @@ def wordcloud_gen():
                 	stopwords = stopwords,
                 	min_font_size = 10).generate(name)
      
-	file = read_csv_file("text.csv")
+	file = read_csv_file("/Users/sirikelshikar/workspace/NewsApp/text.csv")
 
 	plt = wordcloud_gen()
 	plt.figure(figsize = (8, 8), facecolor = None)
