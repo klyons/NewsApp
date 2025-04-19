@@ -13,9 +13,6 @@ import os
 
 from llama_parse import LlamaParse
 #nest_asyncio.apply()
-from llama_index import SimpleDirectoryReader
-
-
 # getting the keys from .env
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 LLAMAPARSE_API_KEY = os.getenv('LLAMAPARSE_API_KEY')
