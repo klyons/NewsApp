@@ -18,48 +18,18 @@ class Parser():
 		if "tagline" not in df.columns:
 			df["tagline"] = ""
 		return df
-	"""
-	def parse_stories_mother_jones(df):
-		#find the header and the subheader
-		df = self.create_columns(df)
-		for i, link in enumerate(df.iloc[0]):
-			response = requests.get(link)
-			if response.status_code == 200:
-				soup = BeautifulSoup(response.content, 'html.parser')
-				
-				# Extract header
-				header = soup.find('h1')
-				if header:
-					df.loc[i, "header"] = header.get_text(strip=True)
-				
-				# Extract tagline
-				tagline = soup.find('h2')
-				if tagline:
-					df.loc[i, "tagline"] = tagline.get_text(strip=True)
-			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")
-	
-	def parse_stories_drudge(df):
-		#find the header and the subheader
-		df = self.create_columns(df)
-		# i want the item in the columns []
 
-		for i, link in enumerate(df.iloc[0]):
-			response = requests.get(link)
-			if response.status_code == 200:
-				soup = BeautifulSoup(response.content, 'html.parser')
-				# Extract header
-				header = soup.find('h1')
-				if header:
-					df.loc[i, "header"] = header.get_text(strip=True)
-				
-				# Extract tagline
-				tagline = soup.find('h2')
-				if tagline:
-					df.loc[i, "tagline"] = tagline.get_text(strip=True)
-			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")
-	"""			
+	def get_hrefs(self, address):
+		hrefs = []
+		response = requests.get(address)
+		if response.status_code == 200:
+			soup = BeautifulSoup(response.content, 'html.parser')
+			for a_tag in soup.find_all('a', href=True):
+				hrefs.append(a_tag['href'])
+		else:
+			print(f"Failed to fetch {address}, status code: {response.status_code}")
+		return pd.DataFrame(hrefs, columns=["hrefs"])
+	
 	def parse_bbc(df):
 		#find the header and the subheader
 		df = self.create_columns(df)
@@ -258,10 +228,6 @@ class Parser():
      
 				if rag.query_headlines(header, tagline):
 					date = soup.find(class_ = "updated-date-date")
-<<<<<<< HEAD
-     
-=======
->>>>>>> 79ab9cee475d6f2aa1ce7e72d00ceba8ab765609
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 

@@ -3,6 +3,7 @@
 possible transfer learning libraries:
 https://huggingface.co/bespokelabs/Bespoke-MiniCheck-7B
 https://huggingface.co/SamLowe/roberta-base-go_emotions
+https://newsapi.org/
 '''
 import requests
 import pandas as pd
@@ -10,7 +11,6 @@ import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 from parser import *
-from RAG import *
 
 #dictionary for all updated dataframes
 dataframes = {}
@@ -91,7 +91,7 @@ def text_blob(df):
 sources = {
         #"drudgereport": "https://www.drudgereport.com", 
         "motherjones": "https://www.motherjones.com",
-        "bbc": "https://www.bbc.com/", 
+        "bbc": "https://www.bbc.com/news", 
         "msnbc": "https://www.msnbc.com/",
         "cnn": "https://www.cnn.com/",
         "foxnews": "https://www.foxnews.com",
@@ -104,24 +104,23 @@ sources = {
 if __name__ == '__main__':
     
     dataframes = create_dataframes(sources)
-    pdb.set_trace()
-    
+    #instantiate the parser class
     parser = Parser()
     #  ['motherjones', 'bbc', 'msnbc', 'cnn', 'foxnews', 'newsmax', 'jpost', 'aljazeera', 'acociatedPress']
-    df_mj = parser.parse_stories_mother_jones(dataframes['motherjones'])
+    df_mj = parser.get_hrefs(dataframes['motherjones'])
+    pdb.set_trace()
     parser.parse_bbc(dataframes['bbc'])
     # parser.parse_stories_drudge(dataframes)
-    parser.parse_stories_cnn(dataframes['cnn'])
-    parser.parse_stories_foxnews(dataframes['foxnews'])
-    parser.parse_stories_newsmax(dataframes['newsmax'])
-    parser.parse_stories_jpost(dataframes['jpost'])
-    parser.parse_stories_aljazeera(dataframes['aljazeera'])
-    parser.parse_stories_acociatedPress(dataframes['acociatedPress'])
+    parser.parse_cnn(dataframes['cnn'])
+    parser.parse_foxnews(dataframes['foxnews'])
+    parser.parse_newsmax(dataframes['newsmax'])
+    parser.parse_jpost(dataframes['jpost'])
+    parser.parse_aljazeera(dataframes['aljazeera'])
+    parser.parse_acociatedPress(dataframes['acociatedPress'])
     
     # dataframes is a dictionary of dataframes
     
     for name, df in dataframes.items():
-        pdb.set_trace()
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)
