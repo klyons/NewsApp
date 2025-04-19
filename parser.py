@@ -255,8 +255,13 @@ class Parser():
 				tagline = soup.find("h2")
 				if tagline: 
 					df.loc[i, tagline] = tagline.get_text(strip=True)
+     
 				if rag.query_headlines(header, tagline):
 					date = soup.find(class_ = "updated-date-date")
+<<<<<<< HEAD
+     
+=======
+>>>>>>> 79ab9cee475d6f2aa1ce7e72d00ceba8ab765609
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 

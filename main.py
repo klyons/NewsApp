@@ -10,6 +10,7 @@ import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 from parser import *
+from RAG import *
 
 #dictionary for all updated dataframes
 dataframes = {}
@@ -120,6 +121,7 @@ if __name__ == '__main__':
     # dataframes is a dictionary of dataframes
     
     for name, df in dataframes.items():
+        pdb.set_trace()
         df = valid_link(df)
         df = remove_duplicate(df)
         df = text_blob(df)

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
+import pdb, csv
+# https://networkx.org/documentation/stable/auto_examples/algorithms/plot_betweenness_centrality.html#sphx-glr-auto-examples-algorithms-plot-betweenness-centrality-py
 
 
 def read_csv_file(file_path):
@@ -15,6 +17,7 @@ def read_csv_file(file_path):
             csv_reader = csv.DictReader(file)
             for row in csv_reader:
                 data.append(row)
+                print("reading newline")
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' was not found.")
         return None
@@ -23,38 +26,38 @@ def read_csv_file(file_path):
          return None
     return data
 
-
-
-
-def wordcloud_gen(name):
+def wordcloud_gen():
 	#df = pd.read_csv(name) #name needs to be a string
 	#text = " ".join(title for title in df.Title)
 	#df.head()
-     
+	path = 'text.csv'
+	name = read_csv_file(path)
+	pdb.set_trace()	
+	#comment_words = ''
 	stopwords = set(STOPWORDS)
 
-	for val in name:
-     
+	#for val in name:
     	# typecaste each val to string
-		val = str(val)
+	#	val = str(val)
  
     	# split the value
-		tokens = val.split()
+	#	tokens = val.split()
      
     	# Converts each token into lowercase
-		for i in range(len(tokens)):
-			tokens[i] = tokens[i].lower()
-     
-		comment_words += " ".join(tokens)+" "
+	#	for i in range(len(tokens)):
+	#		tokens[i] = tokens[i].lower()
+    
+    
+	#	comment_words += " ".join(tokens)+" "
  
 	wordcloud = WordCloud(width = 800, height = 800,
                 	background_color ='white',
                 	stopwords = stopwords,
-                	min_font_size = 10).generate(comment_words)
+                	min_font_size = 10).generate(name)
      
 	file = read_csv_file("/Users/sirikelshikar/workspace/NewsApp/text.csv")
 
-	plt = wordcloud_gen(file)
+	plt = wordcloud_gen()
 	plt.figure(figsize = (8, 8), facecolor = None)
 	plt.imshow(wordcloud)
 	plt.axis("off")
@@ -62,3 +65,8 @@ def wordcloud_gen(name):
 
 	plt.show()
 	return wordcloud
+
+
+
+if __name__ == "__main__":
+	wordcloud_gen()
