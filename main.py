@@ -90,6 +90,7 @@ def text_blob(df):
 
 sources = {
         #"drudgereport": "https://www.drudgereport.com", 
+<<<<<<< HEAD
         "motherjones": "https://www.motherjones.com",
         "bbc": "https://www.bbc.com/news", 
         "msnbc": "https://www.msnbc.com/",
@@ -99,6 +100,17 @@ sources = {
         "jpost": "https://www.jpost.com/",
         "aljazeera": "https://www.aljazeera.com/",
         "acociatedPress": "https://apnews.com/",
+=======
+        "motherjones": "https://www.motherjones.com/politics/",
+        "bbc": "https://www.bbc.com/news/", 
+        "msnbc": "https://www.msnbc.com/white-house/",
+        "cnn": "https://www.cnn.com/politics/",
+        "foxnews": "https://www.foxnews.com/politics/",
+        "newsmax": "https://www.newsmax.com/politics/",
+        "jpost": "https://www.jpost.com/international/",
+        "aljazeera": "https://www.aljazeera.com/news/",
+        "acociatedPress": "https://apnews.com/politics/",
+>>>>>>> c32888c10707fe9bcf7b6dfd08694bfc89e1689a
     }
 
 if __name__ == '__main__':

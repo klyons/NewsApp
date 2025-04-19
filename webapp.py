@@ -1,14 +1,9 @@
 #https://blog.streamlit.io/langchain-streamlit/
 
-# https://networkx.org/documentation/stable/auto_examples/algorithms/plot_betweenness_centrality.html#sphx-glr-auto-examples-algorithms-plot-betweenness-centrality-py
-
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
-<<<<<<< HEAD
-import csv
-=======
 import random
 import requests
 #from sentiment_analysis import analyze_sent
@@ -17,20 +12,19 @@ from textblob import TextBlob
 from bs4 import BeautifulSoup
 
 def analyze_sent(url):
-    response = requests.get(url)
+    #response = requests.get(url)
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        text = soup.get_text()
+    #if response.status_code == 200:
+    #soup = BeautifulSoup(response.content, 'html.parser')
+    #text = soup.get_text()
 
-        blob = TextBlob(text)
-        sentiment = blob.sentiment
-        print("Sentiment:", sentiment)
-        return sentiment.polarity  # ✅ Just return the polarity (float between -1 and 1)
-    else:
-        print("cannot fetch")
-        return 0
->>>>>>> 79ab9cee475d6f2aa1ce7e72d00ceba8ab765609
+    blob = TextBlob(url) #change back to text after
+    sentiment = blob.sentiment
+    print("Sentiment:", sentiment)
+    return sentiment.polarity  
+    #else:
+        #print("cannot fetch")
+        #return 0
 
 
 def slider(url):
@@ -87,8 +81,6 @@ def text_on_screen():
 
 
 
-<<<<<<< HEAD
-=======
 def read_csv_file(file_path):
     """
     Reads a CSV file and returns its content as a list of dictionaries.
@@ -154,4 +146,3 @@ def main():
 
 if __name__ == "__main__":
       main()
->>>>>>> 79ab9cee475d6f2aa1ce7e72d00ceba8ab765609
