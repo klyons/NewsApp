@@ -32,7 +32,7 @@ class Parser():
 			print(f"Failed to fetch {address}, status code: {response.status_code}")
 		return pd.DataFrame(hrefs, columns=["hrefs"])
 	
-	def parse_bbc(df):
+	def parse_bbc(self, df):
 		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []
