@@ -108,21 +108,21 @@ if __name__ == '__main__':
     
     # Parse and process links from Mother Jones
     # This will extract and process hyperlinks from the Mother Jones dataframe
-    df_mj = parser.get_hrefs(dataframes['motherjones'])
+    df_mj = parser.get_hrefs(sources['motherjones'])
     
-    df_bc = parser.get_hrefs(dataframes['bbc'])
+    df_bc = parser.get_hrefs(sources['bbc'])
     
-    df_cnn = parser.get_hrefs(dataframes['cnn'])
+    df_cnn = parser.get_hrefs(sources['cnn'])
     
-    df_fn = parser.get_hrefs(dataframes['foxnews'])
+    df_fn = parser.get_hrefs(sources['foxnews'])
     
-    df_nm = parser.get_hrefs(dataframes['newsmax'])
+    df_nm = parser.get_hrefs(sources['newsmax'])
     
-    df_jp = parser.get_hrefs(dataframes['jpost'])
+    df_jp = parser.get_hrefs(sources['jpost'])
     
-    df_al = parser.get_hrefs(dataframes['aljazeera'])
+    df_al = parser.get_hrefs(sources['aljazeera'])
     
-    df_ap = parser.get_hrefs(dataframes['ap'])
+    df_ap = parser.get_hrefs(sources['ap'])
     
     # dataframes is a dictionary of dataframes
     
