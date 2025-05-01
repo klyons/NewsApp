@@ -21,13 +21,15 @@ class Parser():
 
 	def get_hrefs(self, address):
 		hrefs = []
+		if not validators.url(address):
+			print(f"Invalid URL: {address}")
+			return
 		response = requests.get(address)
 		if response.status_code == 200:
 			soup = BeautifulSoup(response.content, 'html.parser')
 			for a_tag in soup.find_all('a', href=True):
-					if address in a_tag:
-						hrefs.append(a_tag['href'])
-			print(hrefs[:10])
+				# Check if the link contains the domain name
+				hrefs.append(a_tag['href'])
 		else:
 			print(f"Failed to fetch {address}, status code: {response.status_code}")
 		return pd.DataFrame(hrefs, columns=["hrefs"])
@@ -54,10 +56,6 @@ class Parser():
 					if self.print:
 						print(tagline[0].get_text(strip=True))
 					df.loc[i, "tagline"] = tagline.get('id')
-
-			#find date
-				date = soup.find(class_ = "dateline")
-				df.iloc[i, 'date'] = date.get_text()
 
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
