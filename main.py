@@ -89,18 +89,6 @@ def text_blob(df):
     return df
 
 sources = {
-        #"drudgereport": "https://www.drudgereport.com", 
-<<<<<<< HEAD
-        "motherjones": "https://www.motherjones.com",
-        "bbc": "https://www.bbc.com/news", 
-        "msnbc": "https://www.msnbc.com/",
-        "cnn": "https://www.cnn.com/",
-        "foxnews": "https://www.foxnews.com",
-        "newsmax": "https://www.newsmax.com/",
-        "jpost": "https://www.jpost.com/",
-        "aljazeera": "https://www.aljazeera.com/",
-        "acociatedPress": "https://apnews.com/",
-=======
         "motherjones": "https://www.motherjones.com/politics/",
         "bbc": "https://www.bbc.com/news/", 
         "msnbc": "https://www.msnbc.com/white-house/",
@@ -109,8 +97,7 @@ sources = {
         "newsmax": "https://www.newsmax.com/politics/",
         "jpost": "https://www.jpost.com/international/",
         "aljazeera": "https://www.aljazeera.com/news/",
-        "acociatedPress": "https://apnews.com/politics/",
->>>>>>> c32888c10707fe9bcf7b6dfd08694bfc89e1689a
+        "ap": "https://apnews.com/politics/",
     }
 
 if __name__ == '__main__':
@@ -118,17 +105,24 @@ if __name__ == '__main__':
     dataframes = create_dataframes(sources)
     #instantiate the parser class
     parser = Parser()
-    #  ['motherjones', 'bbc', 'msnbc', 'cnn', 'foxnews', 'newsmax', 'jpost', 'aljazeera', 'acociatedPress']
+    
+    # Parse and process links from Mother Jones
+    # This will extract and process hyperlinks from the Mother Jones dataframe
     df_mj = parser.get_hrefs(dataframes['motherjones'])
-    pdb.set_trace()
-    parser.parse_bbc(dataframes['bbc'])
-    # parser.parse_stories_drudge(dataframes)
-    parser.parse_cnn(dataframes['cnn'])
-    parser.parse_foxnews(dataframes['foxnews'])
-    parser.parse_newsmax(dataframes['newsmax'])
-    parser.parse_jpost(dataframes['jpost'])
-    parser.parse_aljazeera(dataframes['aljazeera'])
-    parser.parse_acociatedPress(dataframes['acociatedPress'])
+    
+    df_bc = parser.get_hrefs(dataframes['bbc'])
+    
+    df_cnn = parser.get_hrefs(dataframes['cnn'])
+    
+    df_fn = parser.get_hrefs(dataframes['foxnews'])
+    
+    df_nm = parser.get_hrefs(dataframes['newsmax'])
+    
+    df_jp = parser.get_hrefs(dataframes['jpost'])
+    
+    df_al = parser.get_hrefs(dataframes['aljazeera'])
+    
+    df_ap = parser.get_hrefs(dataframes['ap'])
     
     # dataframes is a dictionary of dataframes
     
