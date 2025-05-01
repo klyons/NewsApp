@@ -25,7 +25,9 @@ class Parser():
 		if response.status_code == 200:
 			soup = BeautifulSoup(response.content, 'html.parser')
 			for a_tag in soup.find_all('a', href=True):
-				hrefs.append(a_tag['href'])
+					if address in a_tag:
+						hrefs.append(a_tag['href'])
+			print(hrefs[:10])
 		else:
 			print(f"Failed to fetch {address}, status code: {response.status_code}")
 		return pd.DataFrame(hrefs, columns=["hrefs"])
@@ -52,6 +54,10 @@ class Parser():
 					if self.print:
 						print(tagline[0].get_text(strip=True))
 					df.loc[i, "tagline"] = tagline.get('id')
+
+			#find date
+				date = soup.find(class_ = "dateline")
+				df.iloc[i, 'date'] = date.get_text()
 
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
