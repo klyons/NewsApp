@@ -67,13 +67,9 @@ def remove_duplicate(df):
     return df
 
 def text_blob(df):
-    df = df.copy()
-    if "dates" not in df.columns:
-
-        df["dates"] = ""
-    if "stories" not in df.columns:
-
-        df["stories"] = ""
+    pdb.set_trace()
+    if "story" not in df.columns:
+        df["story"] = ""
     for i, link in enumerate(df.iloc[:, 0]):
         response = requests.get(link)
 
@@ -83,7 +79,7 @@ def text_blob(df):
             text = soup.get_text()
 
             blob = TextBlob(text)
-            df.loc[i, "stories"] = str(blob)  
+            df.loc[i, "story"] = str(blob)  
         else:
             print("status code error in text_blob")
     return df
@@ -102,6 +98,7 @@ sources = {
 
 if __name__ == '__main__':
     
+    # dataframes is a dictionary of dataframes
     dataframes = create_dataframes(sources)
     #instantiate the parser class
     parser = Parser()
@@ -109,23 +106,75 @@ if __name__ == '__main__':
     # Parse and process links from Mother Jones
     # This will extract and process hyperlinks from the Mother Jones dataframe
     df_mj = parser.get_hrefs(sources['motherjones'])
-    
+    #
+    pdb.set_trace()
+    #df_mj = valid_link(df_mj)
+    #df_mj = remove_duplicate(df_mj)
+    df_mj = text_blob(df_mj) 
+    df_mj = parser.parse_motherjones(df_mj)
+    #
+
     df_bc = parser.get_hrefs(sources['bbc'])
+    #
+    #df_bc = valid_link(df_bc)
+    #df_bc = remove_duplicate(df_bc)
+    df_bc = text_blob(df_bc) 
+    df_bc = parser.parse_motherjones(df_bc)
+    #
     
     df_cnn = parser.get_hrefs(sources['cnn'])
+    #
+    #df_cnn = valid_link(df_cnn)
+    #df_cnn = remove_duplicate(df_cnn)
+    df_cnn = text_blob(df_cnn) 
+    df_cnn = parser.parse_bbc(df_cnn)
+    #
     
     df_fn = parser.get_hrefs(sources['foxnews'])
-    
+    #
+    #df_fn = valid_link(df_fn)
+    #df_fn = remove_duplicate(df_fn)
+    df_fn = text_blob(df_fn) 
+    df_fn = parser.parse_foxnews(df_fn)
+    #
+
     df_nm = parser.get_hrefs(sources['newsmax'])
+    #
+    #df_nm = valid_link(df_nm)
+    #df_nm = remove_duplicate(df_nm)
+    df_nm = text_blob(df_nm) 
+    df_nm = parser.parse_newsmax(df_nm)
+    #
     
     df_jp = parser.get_hrefs(sources['jpost'])
+    #
+    #df_jp = valid_link(df_jp)
+    #df_jp = remove_duplicate(df_jp)
+    df_jp = text_blob(df_jp) 
+    df_jp = parser.parse_jpost(df_jp)
+    #
     
     df_al = parser.get_hrefs(sources['aljazeera'])
+    #
+    #df_al = valid_link(df_al)
+    #df_al = remove_duplicate(df_al)
+    df_al = text_blob(df_al) 
+    df_al = parser.parse_aljazeera(df_al)
+    #
     
     df_ap = parser.get_hrefs(sources['ap'])
+    #
+    #df_ap = valid_link(df_ap)
+    #df_ap = remove_duplicate(df_ap)
+    df_ap = text_blob(df_ap) 
+    df_ap = parser.parse_ap(df_ap)
+    #
     
-    # dataframes is a dictionary of dataframes
+
+
     
+"""
+
     for name, df in dataframes.items():
         df = valid_link(df)
         df = remove_duplicate(df)
@@ -135,7 +184,7 @@ if __name__ == '__main__':
             getattr(parser, parse_functions[name])(df)
             print(df.head(2), "\n", getattr)
         df.to_csv(f'data/{name}.csv', index=False)
-
+"""
 
 """
 https://textblob.readthedocs.io/en/dev/

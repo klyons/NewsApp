@@ -3,6 +3,7 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+import validators
 #from RAG.py import *
 
 
@@ -29,9 +30,14 @@ class Parser():
 			soup = BeautifulSoup(response.content, 'html.parser')
 			for a_tag in soup.find_all('a', href=True):
 				# Check if the link contains the domain name
-				hrefs.append(a_tag['href'])
+				if address in str(a_tag):
+					hrefs.append(a_tag['href'])
+					print("pulled")
+				else:
+					print("no")
 		else:
 			print(f"Failed to fetch {address}, status code: {response.status_code}")
+		print("done")
 		return pd.DataFrame(hrefs, columns=["hrefs"])
 	
 	def parse_bbc(self, df):
@@ -62,6 +68,7 @@ class Parser():
 						
 	def parse_motherjones(self, df):
 		df = self.create_columns(df)
+		pdb.set_trace()
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
@@ -212,7 +219,7 @@ class Parser():
 
 				
 
-	def parse_stories_jpost(self, df):
+	def parse_jpost(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
@@ -237,7 +244,7 @@ class Parser():
 
 		df.to_csv('jpost.csv', index=False, mode='a', header=False) 	
 
-	def parse_stories_aljazeera(self, df):
+	def parse_aljazeera(self, df):
 		
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -264,7 +271,7 @@ class Parser():
 
 		df.to_csv('aljazeera.csv', index=False, mode='a', header=False) 
 
-	def parse_stories_ap(self, df):
+	def parse_ap(self, df):
 		pdb.set_trace()
 		#find the header and the subheader
 		df = self.create_columns(df)
