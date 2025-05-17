@@ -32,12 +32,8 @@ class Parser():
 				# Check if the link contains the domain name
 				if address in str(a_tag):
 					hrefs.append(a_tag['href'])
-					print("pulled")
-				else:
-					print("no")
 		else:
 			print(f"Failed to fetch {address}, status code: {response.status_code}")
-		print("done")
 		return pd.DataFrame(hrefs, columns=["hrefs"])
 	
 	def parse_bbc(self, df):
