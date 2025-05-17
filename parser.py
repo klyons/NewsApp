@@ -73,24 +73,27 @@ class Parser():
 				soup = BeautifulSoup(response.content, 'html.parser')
 
 				#find header
-				header = soup.find('h1')
+				header = soup.find_all(class_= 'entry-text')
 				if header:
 					if self.print:
-						print(header.get_text(strip=True))
+						pdb.set_trace()
+						#print(header.get_text(strip=True))
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				#find tagline
 				tagline = soup.find('h2')
 				if tagline:
 					if self.print:
-						print(tagline.get_text(strip=True))
+						pdb.set_trace()
+						#print(tagline.get_text(strip=True))
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
 				#find date
 				date = soup.find(class_ = "dateline")
-				df.iloc[i, 'date'] = date.get_text()
+				if date:
+					df.loc[i, 'date'] = date.get_text()
 
-		df.to_csv('motherjones.csv', index=False, mode='a', header=False)  		
+		#df.to_csv('motherjones.csv', index=False, mode='a', header=False)  		
 
 
 	def parse_bbc(self, df):
