@@ -223,12 +223,12 @@ class Parser():
 				soup = BeautifulSoup(response.content, 'html.parser')
 
 				#find header
-				header = soup.find('h1')
+				header = soup.find(class_= 'breadcrumbs')
 				if header:
 					df.loc[i, "header"] = header.get_text(strip=True)
 
 				#find tagline
-				tagline = soup.find('p')
+				tagline = soup.find(class_ = 'article-subhead')
 				if tagline[0]:
 					em_tagline = tagline[0].find('em')
 					if em_tagline:
@@ -251,16 +251,16 @@ class Parser():
 				soup = BeautifulSoup(response.content, 'html.parser')
 				
 				#find header
-				header = soup.find('h1')
+				header = soup.find(class_ = 'Page-headline')
 				if header:
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				#find tagline
-				tagline = soup.find_all('p')
+				tagline = soup.find_all("p", class_ ='RichTextStoryBody RichTextStory')
 				if tagline[0]:
 					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
 
-				soup = soup.find(class_ = "Page-dateModified")
+				soup = soup.find('span', attrs={'data-date': ''})
 				date = soup.find("span")
 				if date: 
 					df.iloc[i, 'date'] = date.get_text()
