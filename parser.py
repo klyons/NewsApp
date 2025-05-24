@@ -35,12 +35,40 @@ class Parser():
 		else:
 			print(f"Failed to fetch {address}, status code: {response.status_code}")
 		return pd.DataFrame(hrefs, columns=["hrefs"])
-						
-	def parse_motherjones(self, df):
+	
+	def parse_bbc(self, df):
+		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
+			if response.status_code == 200:
+				soup = BeautifulSoup(response.content, 'html.parser')
+				
+				# Extract header
+				header = soup.find('h1')
+				if header:
+					if self.print:
+						print(header.get_text(strip=True))
+					df.loc[i, "header"] = header.get_text(strip=True)
+				
+				# Extract tagline
+				tagline = soup.find_all('p')
+				if tagline:
+					if self.print:
+						print(tagline[0].get_text(strip=True))
+					df.loc[i, "tagline"] = tagline.get('id')
+
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+						
+	def parse_motherjones(self, df):
+		df = self.create_columns(df)
+		pdb.set_trace()
+		# i want the item in the columns []
+		for i, link in enumerate(df.iloc[0]):
+			response = requests.get(link)
+			pdb.set_trace()
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -48,15 +76,17 @@ class Parser():
 				header = soup.find_all(class_= 'entry-text')
 				if header:
 					if self.print:
+						pdb.set_trace()
 						#print(header.get_text(strip=True))
-						df.loc[i, "header"] = header.get_text(strip=True)
+					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				#find tagline
 				tagline = soup.find('h2')
 				if tagline:
 					if self.print:
+						pdb.set_trace()
 						#print(tagline.get_text(strip=True))
-						df.loc[i, "tagline"] = tagline.get_text(strip=True)
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
 				#find date
 				date = soup.find(class_ = "dateline")
@@ -64,7 +94,6 @@ class Parser():
 					df.loc[i, 'date'] = date.get_text()
 
 		#df.to_csv('motherjones.csv', index=False, mode='a', header=False)  		
-
 
 	def parse_bbc(self, df):
 		df = self.create_columns(df)
@@ -75,7 +104,7 @@ class Parser():
 				soup = BeautifulSoup(response.content, 'html.parser')
 
 				#find header
-				header = soup.find(class_ = "sc-f98b1ad2-0 dfvxux")
+				header = soup.find('h1')
 				if header:
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
@@ -84,7 +113,7 @@ class Parser():
 				if tagline[0]: 
 					df.loc[i, "header"] = tagline[0].get_text(strip=True)
 
-				date = soup.find()
+				date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
 				if date:
 					df.iloc[i, 'date'] = date.get_text()
 
@@ -123,7 +152,7 @@ class Parser():
 				soup = BeautifulSoup(response.content, 'html.parser')
 
 				#find header
-				header = soup.find("h1")
+				header = soup.find_all(class_= 'headline__text inline-placeholder vossi-headline-text')
 				if header: 
 					df.loc[i, "header"] = header.get_text(strip=True)
 				#find tagline 
@@ -148,15 +177,15 @@ class Parser():
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 				#find header
-				header = soup.find(class_= "headline speakable")
+				header = soup.find("h1")
 				if header: 
 					df.loc[i, "header"] = header.get_text(strip=True)
 				#find tagline
-				tagline = soup.find(class_ = "sub-headline speakable")
+				tagline = soup.find("h2")
 				if tagline:
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
-				date = soup.find(class_ = "time")
+				date = soup.find(class_ = "article-date")
 				if date:
 					df.iloc[i, 'date'] = date.get_text()
 
