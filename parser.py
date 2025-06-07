@@ -91,12 +91,11 @@ class Parser():
 				date = soup.find(class_ = "dateline")
 				if date:
 					df.loc[i, 'date'] = date.get_text()
-
-		#df.to_csv('motherjones.csv', index=False, mode='a', header=False)  
-				df.to_parquet('Data/motherjones.parquet', index=False)
+		#df.to_csv('motherjones.csv', index=False, mode='a', header=False)  				
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")		
-
+		df.to_parquet('Data/motherjones.parquet', index=False)
+  
 	def parse_bbc(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -117,12 +116,10 @@ class Parser():
 
 				date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()
-
-				df.to_parquet('Data/bbc.parquet', index=False) 
-
+					df.iloc[i, 'date'] = date.get_text()				
 			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")		
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+		df.to_parquet('Data/bbc.parquet', index=False) 
 
 	def parse_msnbc(self, df):
 		df = self.create_columns(df)
@@ -144,13 +141,12 @@ class Parser():
 
 				date = soup.find(class_ = "relative z-1")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()	
-
-				df.to_parquet('Data/msnbc.parquet', index=False) 
+					df.iloc[i, 'date'] = date.get_text()					 
 
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")	
-			
+		df.to_parquet('Data/msnbc.parquet', index=False)
+  
 	def parse_cnn(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -171,12 +167,10 @@ class Parser():
 				date = str.split(",")
 				date = date[-2] + date[-1]
 				if date:
-					df.iloc[i, 'date'] = date.get_text()	
-
-				df.to_parquet('Data/cnn.parquet', index=False) 
+					df.iloc[i, 'date'] = date.get_text()					
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")	
-
+		df.to_parquet('Data/cnn.parquet', index=False) 
 		#get to fox news
 	def parse_foxnews(self, df):
 		df = self.create_columns(df)
@@ -196,12 +190,11 @@ class Parser():
 
 				date = soup.find(class_ = "article-date")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()
-
-				df.to_parquet('Data/foxnews.parquet', index=False) 		
+					df.iloc[i, 'date'] = date.get_text()						
 
 			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")	
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+		df.to_parquet('Data/foxnews.parquet', index=False)
 
 	def parse_newsmax(self, df):
 		df = self.create_columns(df)
@@ -223,12 +216,10 @@ class Parser():
 
 				date = soup.find(class_ = "artPgDate")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()	
-
-				df.to_parquet('Data/newsmax.parquet', index=False) 
-
+					df.iloc[i, 'date'] = date.get_text()					
 			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")		
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+		df.to_parquet('Data/newsmax.parquet', index=False)		
 
 	def parse_jpost(self, df):
 		df = self.create_columns(df)
@@ -253,13 +244,10 @@ class Parser():
 				else:
 					date = None
 				if date:
-					df.iloc[i, 'date'] = date.get_text()	
-
-				df.to_parquet('Data/jpost.parquet', index=False) 	
-
+					df.iloc[i, 'date'] = date.get_text()						
 			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")	
-
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+		df.to_parquet('Data/jpost.parquet', index=False) 
 	def parse_aljazeera(self, df):
 		
 		df = self.create_columns(df)
@@ -283,12 +271,10 @@ class Parser():
 
 				date = soup.find(class_ = "screen-reader-text")
 				if date:
-					df.iloc[i, 'date'] = date.get_text()	
-
-				df.to_parquet('Data/aljazeera.parquet', index=False) 
-
+					df.iloc[i, 'date'] = date.get_text()					
 			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")	
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+		df.to_parquet('Data/aljazeera.parquet', index=False)
 
 	def parse_ap(self, df):
 		#find the header and the subheader
@@ -312,12 +298,10 @@ class Parser():
 				soup = soup.find('span', attrs={'data-date': ''})
 				date = soup.find("span")
 				if date: 
-					df.iloc[i, 'date'] = date.get_text()
-
-				df.to_parquet('Data/ap.parquet', index=False) 
-
+					df.iloc[i, 'date'] = date.get_text()				 
 			else:
-				print(f"Failed to fetch {link}, status code: {response.status_code}")	
+				print(f"Failed to fetch {link}, status code: {response.status_code}")
+		df.to_parquet('Data/ap.parquet', index=False)
 	
 		# Your specific parsing logic for Associated Press
 
