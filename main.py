@@ -67,7 +67,6 @@ def remove_duplicate(df):
     return df
 
 def text_blob(df):
-    pdb.set_trace()
     if "story" not in df.columns:
         df["story"] = ""
     for i, link in enumerate(df.iloc[:, 0]):
@@ -107,7 +106,6 @@ if __name__ == '__main__':
     # This will extract and process hyperlinks from the Mother Jones dataframe
     df_mj = parser.get_hrefs(sources['motherjones'])
     #
-    pdb.set_trace()
     #df_mj = valid_link(df_mj)
     #df_mj = remove_duplicate(df_mj)
     df_mj = text_blob(df_mj) 
@@ -119,7 +117,7 @@ if __name__ == '__main__':
     #df_bc = valid_link(df_bc)
     #df_bc = remove_duplicate(df_bc)
     df_bc = text_blob(df_bc) 
-    df_bc = parser.parse_motherjones(df_bc)
+    df_bc = parser.parse_bbc(df_bc)
     #
     
     df_cnn = parser.get_hrefs(sources['cnn'])
@@ -127,7 +125,7 @@ if __name__ == '__main__':
     #df_cnn = valid_link(df_cnn)
     #df_cnn = remove_duplicate(df_cnn)
     df_cnn = text_blob(df_cnn) 
-    df_cnn = parser.parse_bbc(df_cnn)
+    df_cnn = parser.parse_cnn(df_cnn)
     #
     
     df_fn = parser.get_hrefs(sources['foxnews'])

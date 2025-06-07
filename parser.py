@@ -4,12 +4,15 @@ import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 import validators
-#from RAG.py import *
+try:
+	import RAG
+	rag = RAG
+except ImportError:
+	rag = None
 
 
 #story parser
 class Parser():
-    
 	def __init__(self):
 		self.print = False
 
@@ -57,18 +60,16 @@ class Parser():
 				if tagline:
 					if self.print:
 						print(tagline[0].get_text(strip=True))
-					df.loc[i, "tagline"] = tagline.get('id')
+					df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
 
 			else:
 				print(f"Failed to fetch {link}, status code: {response.status_code}")
 						
 	def parse_motherjones(self, df):
 		df = self.create_columns(df)
-		pdb.set_trace()
 		# i want the item in the columns []
 		for i, link in enumerate(df.iloc[0]):
 			response = requests.get(link)
-			pdb.set_trace()
 			if response.status_code == 200:
 				soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -76,16 +77,14 @@ class Parser():
 				header = soup.find_all(class_= 'entry-text')
 				if header:
 					if self.print:
-						pdb.set_trace()
-						#print(header.get_text(strip=True))
+						print(header.get_text(strip=True))
 					df.loc[i, "header"] = header.get_text(strip=True)
 				
 				#find tagline
 				tagline = soup.find('h2')
 				if tagline:
 					if self.print:
-						pdb.set_trace()
-						#print(tagline.get_text(strip=True))
+						print(tagline.get_text(strip=True))
 					df.loc[i, "tagline"] = tagline.get_text(strip=True)
 
 				#find date
@@ -117,7 +116,7 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()
 
-		df.to_csv('bbc.csv', index=False, mode='a', header=False) 	
+		df.to_parquet('Data/bbc.parquet', index=False) 	
 
 	def parse_msnbc(self, df):
 		df = self.create_columns(df)
@@ -141,7 +140,7 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_csv('msnbc.csv', index=False, mode='a', header=False) 
+		df.to_parquet('Data/msnbc.parquet', index=False) 
 
 	def parse_cnn(self, df):
 		df = self.create_columns(df)
@@ -165,10 +164,10 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_csv('cnn.csv', index=False, mode='a', header=False) 
+		df.to_parquet('Data/cnn.parquet', index=False) 
 
 
-	#get to fox news
+		#get to fox news
 	def parse_foxnews(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -189,7 +188,7 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()
 
-		df.to_csv('foxnews.csv', index=False, mode='a', header=False) 		
+		df.to_parquet('Data/foxnews.parquet', index=False) 		
 
 	def parse_newsmax(self, df):
 		df = self.create_columns(df)
@@ -213,7 +212,7 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_csv('newsmax.csv', index=False, mode='a', header=False) 
+		df.to_parquet('Data/newsmax.parquet', index=False) 
 
 				
 
@@ -233,14 +232,16 @@ class Parser():
 				#find tagline
 				tagline = soup.find("h2")
 				if tagline: 
-					df.loc[i, tagline] = tagline.get_text(strip=True)
-     
-				if rag.query_headlines(header, tagline):
+					df.loc[i, "tagline"] = tagline.get_text(strip=True)
+	 
+				if rag and hasattr(rag, 'query_headlines') and rag.query_headlines(header, tagline):
 					date = soup.find(class_ = "updated-date-date")
+				else:
+					date = None
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_csv('jpost.csv', index=False, mode='a', header=False) 	
+		df.to_parquet('Data/jpost.parquet', index=False) 	
 
 	def parse_aljazeera(self, df):
 		
@@ -267,10 +268,9 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_csv('aljazeera.csv', index=False, mode='a', header=False) 
+		df.to_parquet('Data/aljazeera.parquet', index=False) 
 
 	def parse_ap(self, df):
-		pdb.set_trace()
 		#find the header and the subheader
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -294,16 +294,23 @@ class Parser():
 				if date: 
 					df.iloc[i, 'date'] = date.get_text()
 
-		df.to_csv('ap.csv', index=False, mode='a', header=False) 
+		df.to_parquet('Data/ap.parquet', index=False) 
 
-    
-        # Your specific parsing logic for Associated Press
+	
+		# Your specific parsing logic for Associated Press
 
-
+"""
 
 if __name__ == '__main__':
-	
 	parser = Parser()
-	
-	parser.parse_bbc()
-    
+	# Example: create a DataFrame with a column of URLs for testing
+	# Replace these URLs with real news article URLs as needed
+	data = {'links': [
+		'https://www.bbc.com/news/world-us-canada-62087185',
+		'https://www.bbc.com/news/world-europe-62087186'
+	]}
+	df = pd.DataFrame(data)
+	# The parser expects the links in the first column, so pass df accordingly
+	parser.parse_bbc(df)
+
+"""
