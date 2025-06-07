@@ -92,7 +92,10 @@ class Parser():
 				if date:
 					df.loc[i, 'date'] = date.get_text()
 
-		#df.to_csv('motherjones.csv', index=False, mode='a', header=False)  		
+		#df.to_csv('motherjones.csv', index=False, mode='a', header=False)  
+				df.to_parquet('Data/motherjones.parquet', index=False)
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")		
 
 	def parse_bbc(self, df):
 		df = self.create_columns(df)
@@ -116,7 +119,10 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()
 
-		df.to_parquet('Data/bbc.parquet', index=False) 	
+				df.to_parquet('Data/bbc.parquet', index=False) 
+
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")		
 
 	def parse_msnbc(self, df):
 		df = self.create_columns(df)
@@ -140,8 +146,11 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_parquet('Data/msnbc.parquet', index=False) 
+				df.to_parquet('Data/msnbc.parquet', index=False) 
 
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")	
+			
 	def parse_cnn(self, df):
 		df = self.create_columns(df)
 		# i want the item in the columns []
@@ -164,8 +173,9 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_parquet('Data/cnn.parquet', index=False) 
-
+				df.to_parquet('Data/cnn.parquet', index=False) 
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")	
 
 		#get to fox news
 	def parse_foxnews(self, df):
@@ -188,7 +198,10 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()
 
-		df.to_parquet('Data/foxnews.parquet', index=False) 		
+				df.to_parquet('Data/foxnews.parquet', index=False) 		
+
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")	
 
 	def parse_newsmax(self, df):
 		df = self.create_columns(df)
@@ -212,9 +225,10 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_parquet('Data/newsmax.parquet', index=False) 
+				df.to_parquet('Data/newsmax.parquet', index=False) 
 
-				
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")		
 
 	def parse_jpost(self, df):
 		df = self.create_columns(df)
@@ -241,7 +255,10 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_parquet('Data/jpost.parquet', index=False) 	
+				df.to_parquet('Data/jpost.parquet', index=False) 	
+
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")	
 
 	def parse_aljazeera(self, df):
 		
@@ -268,7 +285,10 @@ class Parser():
 				if date:
 					df.iloc[i, 'date'] = date.get_text()	
 
-		df.to_parquet('Data/aljazeera.parquet', index=False) 
+				df.to_parquet('Data/aljazeera.parquet', index=False) 
+
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")	
 
 	def parse_ap(self, df):
 		#find the header and the subheader
@@ -294,8 +314,10 @@ class Parser():
 				if date: 
 					df.iloc[i, 'date'] = date.get_text()
 
-		df.to_parquet('Data/ap.parquet', index=False) 
+				df.to_parquet('Data/ap.parquet', index=False) 
 
+			else:
+				print(f"Failed to fetch {link}, status code: {response.status_code}")	
 	
 		# Your specific parsing logic for Associated Press
 
