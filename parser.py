@@ -25,10 +25,13 @@ class Parser():
             soup = BeautifulSoup(response.content, 'html.parser')
             for a_tag in soup.find_all('a', href=True):
                 # Check if the link contains the domain name
-                if address in str(a_tag):
-                    hrefs.append(a_tag['href'])
+                href = a_tag['href']
+                # Basic validation: skip javascript, mailto, and empty links
+                if href and not href.startswith('javascript:', 'mailto:', '#'):
+                    hrefs.append(href)
         else:
             print(f"Failed to fetch {address}, status code: {response.status_code}")
+        
         return pd.DataFrame(hrefs, columns=["hrefs"])
 
     def parse_bbc(self, df):
