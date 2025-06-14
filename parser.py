@@ -58,33 +58,37 @@ class Parser():
         counter = 0
         df = self.create_columns(df)
         base_url = "https://www.motherjones.com"
-        for i, link in enumerate(df.iloc[0]):
+        # Iterate over all rows in the DataFrame
+        for i, row in df.iterrows():
+            link = row['hrefs'] if 'hrefs' in row else None
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
             # Convert relative URLs to absolute
-            full_link = urljoin(base_url, link)
-            if validators.url(full_link):
+            full_link = urljoin(base_url, str(link))
+            response = requests.get(full_link)
+            if response.status_code == 200:
                 counter += 1
-                response = requests.get(full_link)
                 soup = BeautifulSoup(response.content, 'html.parser')
-                #find header
-                header = soup.find_all(class_='entry-text')
+                # find header
+                header = soup.find(class_='entry-text')
                 if header:
                     if self.print:
                         print(header.get_text(strip=True))
                     df.loc[i, "header"] = header.get_text(strip=True)
-                #find tagline
+                # find tagline
                 tagline = soup.find('h2')
                 if tagline:
                     if self.print:
                         print(tagline.get_text(strip=True))
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
-                #find date
+                # find date
                 date = soup.find(class_ = "dateline")
                 if date:
-                    df.loc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/motherjones.parquet', index=False)
+                    df.loc[i, 'date'] = date.get_text(strip=True)
             else:
-                print(f"Failed to fetch {full_link}")
-                pass
+                print(f"Failed to fetch {full_link}, status code: {response.status_code}")
+        df.to_parquet('Data/motherjones.parquet', index=False)
         pdb.set_trace()
 
     def parse_bbc(self, df):
