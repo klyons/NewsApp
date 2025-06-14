@@ -11,6 +11,7 @@ import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 from parser import *
+from urllib.parse import urlparse
 
 #dictionary for all updated dataframes
 dataframes = {}
