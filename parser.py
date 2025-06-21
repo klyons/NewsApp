@@ -24,46 +24,26 @@ class Parser():
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             for a_tag in soup.find_all('a', href=True):
-                # Check if the link contains the domain name
                 href = a_tag['href']
-                # Basic validation: skip javascript, mailto, and empty links
-                if href and not href.startswith('javascript:', 'mailto:', '#'):
-                    hrefs.append(href)
+                # Only keep links that contain the address (base domain)
+                if address in href:
+                    # Make absolute if needed
+                    if not href.startswith(('http://', 'https://')):
+                        href = urljoin(address, href)
+                    if validators.url(href):
+                        hrefs.append(href)
         else:
             print(f"Failed to fetch {address}, status code: {response.status_code}")
-        
         return pd.DataFrame(hrefs, columns=["hrefs"])
-
-    def parse_bbc(self, df):
-        #find the header and the subheader
-        df = self.create_columns(df)
-        # i want the item in the columns []
-        for i, link in enumerate(df.iloc[0]):
-            response = requests.get(link)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
-                # Extract header
-                header = soup.find('h1')
-                if header:
-                    if self.print:
-                        print(header.get_text(strip=True))
-                    df.loc[i, "header"] = header.get_text(strip=True)
-                # Extract tagline
-                tagline = soup.find_all('p')
-                if tagline:
-                    if self.print:
-                        print(tagline[0].get_text(strip=True))
-                    df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
-            else:
-                print(f"Failed to fetch {link}, status code: {response.status_code}")
 
     def parse_motherjones(self, df):
         counter = 0
         df = self.create_columns(df)
+        df = df.reset_index(drop=True)
         base_url = "https://www.motherjones.com"
         # Iterate over all rows in the DataFrame
         for i, row in df.iterrows():
-            link = row['hrefs'] if 'hrefs' in row else None
+            link = row.get('hrefs', None)
             # Skip empty, fragment, or mailto/javascript links
             if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
                 continue
@@ -95,23 +75,39 @@ class Parser():
         pdb.set_trace()
 
     def parse_bbc(self, df):
+        counter = 0
         df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
-            response = requests.get(link)
+        df = df.reset_index(drop=True)
+        base_url = "https://www.bbc.com"
+        # Iterate over all rows in the DataFrame
+        for i, row in df.iterrows():
+            link = row.get('hrefs', None)
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
+            # Convert relative URLs to absolute
+            full_link = urljoin(base_url, str(link))
+            response = requests.get(full_link)
             if response.status_code == 200:
+                counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
+                # find header
                 header = soup.find('h1')
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                # find tagline
                 tagline = soup.find_all('p')
                 if tagline[0]:
                     df.loc[i, "header"] = tagline[0].get_text(strip=True)
+                # find date
                 date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
                 if date:
                     df.iloc[i, 'date'] = date.get_text()
                 df.to_parquet('Data/bbc.parquet', index=False)
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
+            df.to_parquet('Data/bbc.parquet', index=False)
+            pdb.set_trace()
 
     def parse_msnbc(self, df):
         df = self.create_columns(df)
