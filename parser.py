@@ -23,19 +23,22 @@ class Parser():
         response = requests.get(address)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
+            from urllib.parse import urlparse
+            base_domain = urlparse(address).netloc
             for a_tag in soup.find_all('a', href=True):
                 href = a_tag['href']
-                # Only keep links that contain the address (base domain)
-                if address in href:
-                    # Make absolute if needed
-                    if not href.startswith(('http://', 'https://')):
-                        href = urljoin(address, href)
-                    if validators.url(href):
-                        hrefs.append(href)
+                # Make absolute if needed
+                if not href.startswith(('http://', 'https://')):
+                    href = urljoin(address, href)
+                # Only keep links on the same domain
+                href_domain = urlparse(href).netloc
+                if href_domain == base_domain and validators.url(href):
+                    hrefs.append(href)
         else:
             print(f"Failed to fetch {address}, status code: {response.status_code}")
         return pd.DataFrame(hrefs, columns=["hrefs"])
 
+    #fix header & tagline - otherwise DONE
     def parse_motherjones(self, df):
         counter = 0
         df = self.create_columns(df)
@@ -72,13 +75,51 @@ class Parser():
             else:
                 print(f"Failed to fetch {full_link}, status code: {response.status_code}")
         df.to_parquet('Data/motherjones.parquet', index=False)
-        pdb.set_trace()
+        #pdb.set_trace()
 
-    def parse_bbc(self, df):
+# Doesn't work because of a webscrapper block
+#     def parse_bbc(self, df):
+#         pdb.set_trace()
+#         counter = 0
+#         df = self.create_columns(df)
+#         df = df.reset_index(drop=True)
+#         base_url = "https://www.bbc.com"
+#         # Iterate over all rows in the DataFrame3
+#         for i, row in df.iterrows():
+#             link = row.get('hrefs', None)
+#             # Skip empty, fragment, or mailto/javascript links
+#             if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+#                 continue
+#             # Convert relative URLs to absolute
+#             full_link = urljoin(base_url, str(link))
+#             response = requests.get(full_link)
+#             if response.status_code == 200:
+#                 counter += 1
+#                 soup = BeautifulSoup(response.content, 'html.parser')
+#                 # find header
+#                 header = soup.find('h1')
+#                 if header:
+#                     df.loc[i, "header"] = header.get_text(strip=True)
+#                 # find tagline
+#                 tagline = soup.find_all('p')
+#                 if tagline[0]:
+#                     df.loc[i, "header"] = tagline[0].get_text(strip=True)
+#                 # find date
+#                 date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
+#                 if date:
+#                     df.iloc[i, 'date'] = date.get_text()
+#                 df.to_parquet('Data/bbc.parquet', index=False)
+#             else:
+#                 print(f"Failed to fetch {link}, status code: {response.status_code}")
+#         df.to_parquet('Data/bbc.parquet', index=False)
+#         pdb.set_trace()
+
+    def parse_msnbc(self, df):
+        pdb.set_trace()
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
-        base_url = "https://www.bbc.com"
+        base_url = "https://www.msnbc.com"
         # Iterate over all rows in the DataFrame
         for i, row in df.iterrows():
             link = row.get('hrefs', None)
@@ -89,45 +130,24 @@ class Parser():
             full_link = urljoin(base_url, str(link))
             response = requests.get(full_link)
             if response.status_code == 200:
-                counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
-                # find header
-                header = soup.find('h1')
-                if header:
-                    df.loc[i, "header"] = header.get_text(strip=True)
-                # find tagline
-                tagline = soup.find_all('p')
-                if tagline[0]:
-                    df.loc[i, "header"] = tagline[0].get_text(strip=True)
-                # find date
-                date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
-                if date:
-                    df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/bbc.parquet', index=False)
-            else:
-                print(f"Failed to fetch {link}, status code: {response.status_code}")
-            df.to_parquet('Data/bbc.parquet', index=False)
-            pdb.set_trace()
-
-    def parse_msnbc(self, df):
-        df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
-            response = requests.get(link)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
+                #find header
                 header = soup.find("h1")
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                #find tagline
                 tagline = soup.find(id = "article-dek")
                 if tagline:
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
+                #find date
                 date = soup.find(class_ = "relative z-1")
                 if date:
                     df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/msnbc.parquet', index=False)
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
+        #df.to_parquet('Data/msnbc.parquet', index=False)
 
+"""
     def parse_cnn(self, df):
         df = self.create_columns(df)
         for i, link in enumerate(df.iloc[0]):
@@ -246,3 +266,5 @@ class Parser():
                 df.to_parquet('Data/ap.parquet', index=False)
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
+
+"""
