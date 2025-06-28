@@ -86,7 +86,7 @@ def text_blob(df):
 
 sources = {
         "motherjones": "https://www.motherjones.com/politics/",
-        "bbc": "https://www.bbc.com/news/", 
+        #"bbc": "https://www.bbc.com/news/", 
         "msnbc": "https://www.msnbc.com/white-house/",
         "cnn": "https://www.cnn.com/politics/",
         "foxnews": "https://www.foxnews.com/politics/",
@@ -113,14 +113,24 @@ if __name__ == '__main__':
     df_mj = parser.parse_motherjones(df_mj)
     #
 
-    df_bc = parser.get_hrefs(sources['bbc'])
+    #df_bc = parser.get_hrefs(sources['bbc'])
     #
     #df_bc = valid_link(df_bc)
     #df_bc = remove_duplicate(df_bc)
-    df_bc = text_blob(df_bc) 
-    df_bc = parser.parse_bbc(df_bc)
+    #df_bc = text_blob(df_bc) 
+    #df_bc = parser.parse_bbc(df_bc)
     #
     
+    df_msnbc = parser.get_hrefs(sources['msnbc'])
+    pdb.set_trace()
+    #
+    #df_msnbc = valid_link(df_msnbc)
+    #df_msnbc = remove_duplicate(df_msnbc)
+    df_msnbc = text_blob(df_msnbc)
+     
+    df_msnbc = parser.parse_msnbc(df_msnbc)
+    #
+
     df_cnn = parser.get_hrefs(sources['cnn'])
     #
     #df_cnn = valid_link(df_cnn)
