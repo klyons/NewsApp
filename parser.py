@@ -75,19 +75,14 @@ class Parser():
                     df.loc[i, 'date'] = date.get_text(strip=True)
             else:
                 print(f"Failed to fetch {full_link}, status code: {response.status_code}")
-<<<<<<< HEAD
-        df.to_parquet('Data/motherjones.parquet', index=False)
-        #pdb.set_trace()
-=======
         parquet_path = f'Data/motherjones.parquet'
         if os.path.exists(parquet_path):
             existing_df = pd.read_parquet(parquet_path)
-            combined_df = pd.concat([existing_df, pd.DataFrame(new_rows)], ignore_index=True)
+            combined_df = pd.concat([existing_df, df], ignore_index=True)
             combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
-            combined_df = pd.DataFrame(new_rows)
+            combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
->>>>>>> 7bf574cc259c7489adc36d742e34a6634f254428
 
 # Doesn't work because of a webscrapper block
 #     def parse_bbc(self, df):
@@ -142,8 +137,6 @@ class Parser():
             full_link = urljoin(base_url, str(link))
             response = requests.get(full_link)
             if response.status_code == 200:
-<<<<<<< HEAD
-=======
                 counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
                 # find header
@@ -176,7 +169,6 @@ class Parser():
         for i, link in enumerate(df.iloc[0]):
             response = requests.get(link)
             if response.status_code == 200:
->>>>>>> 7bf574cc259c7489adc36d742e34a6634f254428
                 soup = BeautifulSoup(response.content, 'html.parser')
                 #find header
                 header = soup.find("h1")
@@ -190,11 +182,6 @@ class Parser():
                 date = soup.find(class_ = "relative z-1")
                 if date:
                     df.iloc[i, 'date'] = date.get_text()
-<<<<<<< HEAD
-            else:
-                print(f"Failed to fetch {link}, status code: {response.status_code}")
-        #df.to_parquet('Data/msnbc.parquet', index=False)
-=======
                     # Append new row to parquet, avoiding duplicates
         parquet_path = f'Data/msnbc.parquet'
         if os.path.exists(parquet_path):
@@ -202,9 +189,8 @@ class Parser():
             combined_df = pd.concat([existing_df, pd.DataFrame(new_rows)], ignore_index=True)
             combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
-            combined_df = pd.DataFrame(new_rows)
+            combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
->>>>>>> 7bf574cc259c7489adc36d742e34a6634f254428
 
 """
     def parse_cnn(self, df):
