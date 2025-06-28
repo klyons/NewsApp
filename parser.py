@@ -122,9 +122,8 @@ class Parser():
 #         df.to_parquet('Data/bbc.parquet', index=False)
 #         pdb.set_trace()
 #--------------------------------------------------------------------------------------------------
-    #fix header & tagline - otherwise DONE  
+    #fix header & tagline & date - otherwise DONE  
     def parse_msnbc(self, df):
-        pdb.set_trace()
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -167,25 +166,37 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-        
-"""
+#--------------------------------------------------------------------------------------------------     
     def parse_cnn(self, df):
+        pdb.set_trace()
+        counter = 0
         df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
-            response = requests.get(link)
+        df = df.reset_index(drop=True)
+        base_url = "https://www.cnn.com"
+        # Iterate over all rows in the DataFrame
+        for i, row in df.iterrows():
+            link = row.get('hrefs', None)
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
+            # Convert relative URLs to absolute
+            full_link = urljoin(base_url, str(link))
+            response = requests.get(full_link)
             if response.status_code == 200:
+                counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
-                header = soup.find_all(class_= 'headline__text inline-placeholder vossi-headline-text')
+                header = soup.find(class_= 'headline__text inline-placeholder vossi-headline-text')
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
-                tagline = soup.find_all("p")
-                if tagline[0]:
-                    df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
-                str_ = soup.find(class_ = "timestamp vossi-timestamp")
-                date = str_.split(",") if str_ else []
-                if len(date) >= 2:
-                    date = date[-2] + date[-1]
-                    df.iloc[i, 'date'] = date
+                tagline = soup.find("p")
+                if tagline:
+                    df.loc[i, "tagline"] = tagline.get_text(strip=True)
+                str_ = soup.select(".timestamp vossi-timestamp")
+                if str_:
+                    date = str_.split(",") if str_ else []
+                    if len(date) >= 2:
+                        date = date[-2] + date[-1]
+                        df.iloc[i, 'date'] = date
                 #df.to_parquet('Data/cnn.parquet', index=False)
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
@@ -193,11 +204,13 @@ class Parser():
         if os.path.exists(parquet_path):
             existing_df = pd.read_parquet(parquet_path)
             combined_df = pd.concat([existing_df, df], ignore_index=True)
+            pdb.set_trace()
             combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
 
+"""
     def parse_foxnews(self, df):
         df = self.create_columns(df)
         for i, link in enumerate(df.iloc[0]):
