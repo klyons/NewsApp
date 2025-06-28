@@ -1,4 +1,3 @@
-
 import networkx as nx
 import spacy
 from gensim.models import KeyedVectors
@@ -28,6 +27,8 @@ print("Named entities:", entities)
 # Load Google's pre-trained model (about 3.5GB)
 model = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
 
+
+
 vector = model['language']  # returns 300D vector
 
 
@@ -50,3 +51,12 @@ for i in range(len(keywords)):
         sim = cosine_similarity([model[keywords[i]]], [model[keywords[j]]])[0][0]
         if sim > 0.6:
             G.add_edge(keywords[i], keywords[j], weight=sim)
+
+# Average the vectors for a list of words
+words = ['language', 'processing', 'model']
+vectors = [model[word] for word in words if word in model]
+if vectors:
+    avg_vector = np.mean(vectors, axis=0)
+else:
+    # Handle case where none of the words are in the model
+    avg_vector = np.zeros(model.vector_size)
