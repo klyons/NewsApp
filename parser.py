@@ -166,7 +166,8 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-#--------------------------------------------------------------------------------------------------     
+        
+"""
     def parse_cnn(self, df):
         pdb.set_trace()
         counter = 0
