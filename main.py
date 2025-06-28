@@ -122,7 +122,7 @@ if __name__ == '__main__':
     #
     
     df_msnbc = parser.get_hrefs(sources['msnbc'])
-    pdb.set_trace()
+    #pdb.set_trace()
     #
     #df_msnbc = valid_link(df_msnbc)
     #df_msnbc = remove_duplicate(df_msnbc)
