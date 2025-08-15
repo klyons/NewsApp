@@ -29,6 +29,7 @@ def preprocess(text):
     tokens = [t for t in tokens if t not in stop_words and t not in string.punctuation]
     return tokens
 
+#compare document headers 
 def document_vector(text):
     tokens = preprocess(text)
     vectors = [model[word] for word in tokens if word in model.key_to_index]
