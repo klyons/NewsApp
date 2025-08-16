@@ -102,15 +102,15 @@ if __name__ == '__main__':
     dataframes = create_dataframes(sources)
     #instantiate the parser class
     parser = Parser()
-    
+ 
     # Parse and process links from Mother Jones
     # This will extract and process hyperlinks from the Mother Jones dataframe
-    df_mj = parser.get_hrefs(sources['motherjones'])
+    #df_mj = parser.get_hrefs(sources['motherjones'])
     #
     #df_mj = valid_link(df_mj)
     #df_mj = remove_duplicate(df_mj)
-    df_mj = text_blob(df_mj) 
-    df_mj = parser.parse_motherjones(df_mj)
+    #df_mj = text_blob(df_mj) 
+    #df_mj = parser.parse_motherjones(df_mj)
     #
 
     #df_bc = parser.get_hrefs(sources['bbc'])
@@ -121,14 +121,13 @@ if __name__ == '__main__':
     #df_bc = parser.parse_bbc(df_bc)
     #
     
-    df_msnbc = parser.get_hrefs(sources['msnbc'])
+    #df_msnbc = parser.get_hrefs(sources['msnbc'])
     #pdb.set_trace()
     #
     #df_msnbc = valid_link(df_msnbc)
     #df_msnbc = remove_duplicate(df_msnbc)
-    df_msnbc = text_blob(df_msnbc)
-     
-    df_msnbc = parser.parse_msnbc(df_msnbc)
+    #df_msnbc = text_blob(df_msnbc)
+    #df_msnbc = parser.parse_msnbc(df_msnbc)
     #
 
     df_cnn = parser.get_hrefs(sources['cnn'])
@@ -139,6 +138,7 @@ if __name__ == '__main__':
     df_cnn = parser.parse_cnn(df_cnn)
     #
     
+    #------------------------------------------------------------------------------
     df_fn = parser.get_hrefs(sources['foxnews'])
     #
     #df_fn = valid_link(df_fn)
@@ -146,6 +146,7 @@ if __name__ == '__main__':
     df_fn = text_blob(df_fn) 
     df_fn = parser.parse_foxnews(df_fn)
     #
+    #------------------------------------------------------------------------------
 
     df_nm = parser.get_hrefs(sources['newsmax'])
     #

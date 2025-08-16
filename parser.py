@@ -166,8 +166,8 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-        
-"""
+#--------------------------------------------------------------------------------------------------        
+
     def parse_cnn(self, df):
         pdb.set_trace()
         counter = 0
@@ -210,7 +210,7 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-3
+
 """
     def parse_foxnews(self, df):
         df = self.create_columns(df)
