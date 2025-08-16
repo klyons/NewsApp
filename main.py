@@ -130,16 +130,17 @@ if __name__ == '__main__':
     #df_msnbc = parser.parse_msnbc(df_msnbc)
     #
 
-    df_cnn = parser.get_hrefs(sources['cnn'])
+    #df_cnn = parser.get_hrefs(sources['cnn'])
     #
     #df_cnn = valid_link(df_cnn)
     #df_cnn = remove_duplicate(df_cnn)
-    df_cnn = text_blob(df_cnn) 
-    df_cnn = parser.parse_cnn(df_cnn)
+    #df_cnn = text_blob(df_cnn) 
+    #df_cnn = parser.parse_cnn(df_cnn)
     #
     
     #------------------------------------------------------------------------------
     df_fn = parser.get_hrefs(sources['foxnews'])
+    pdb.set_trace()
     #
     #df_fn = valid_link(df_fn)
     #df_fn = remove_duplicate(df_fn)
