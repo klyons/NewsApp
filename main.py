@@ -138,25 +138,25 @@ if __name__ == '__main__':
     #df_cnn = parser.parse_cnn(df_cnn)
     #
     
-    #------------------------------------------------------------------------------
-    df_fn = parser.get_hrefs(sources['foxnews'])
-    pdb.set_trace()
+    #df_fn = parser.get_hrefs(sources['foxnews'])
     #
     #df_fn = valid_link(df_fn)
     #df_fn = remove_duplicate(df_fn)
-    df_fn = text_blob(df_fn) 
-    df_fn = parser.parse_foxnews(df_fn)
+    #df_fn = text_blob(df_fn) 
+    #df_fn = parser.parse_foxnews(df_fn)
     #
-    #------------------------------------------------------------------------------
 
+    #------------------------------------------------------------------------------
     df_nm = parser.get_hrefs(sources['newsmax'])
+    pdb.set_trace()
     #
     #df_nm = valid_link(df_nm)
     #df_nm = remove_duplicate(df_nm)
     df_nm = text_blob(df_nm) 
     df_nm = parser.parse_newsmax(df_nm)
     #
-    
+   #------------------------------------------------------------------------------
+
     df_jp = parser.get_hrefs(sources['jpost'])
     #
     #df_jp = valid_link(df_jp)
