@@ -187,11 +187,14 @@ class Parser():
                 counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
                 header = soup.find(class_= 'headline__text inline-placeholder vossi-headline-text')
+                # find header
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                # find tagline
                 tagline = soup.find("p")
                 if tagline:
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
+                # find date
                 str_ = soup.select(".timestamp vossi-timestamp")
                 if str_:
                     date = str_.split(",") if str_ else []
@@ -232,12 +235,15 @@ class Parser():
                 counter += 1
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
+                # find header
                 header = soup.find("h1")
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                # find tagline
                 tagline = soup.find("h2")
                 if tagline:
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
+                # find date
                 #date = soup.find(class_ = "article-date")
                 #if date:
                     #df.iloc[i, 'date'] = date.get_text()
@@ -253,7 +259,7 @@ class Parser():
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------
-
+    #no date - otherwise DONE
     def parse_newsmax(self, df):
         pdb.set_trace()
         counter = 0
@@ -275,11 +281,14 @@ class Parser():
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
                 header = soup.find("h1")
+                # find header
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
-                tagline = soup.find_all("p")
-                if tagline[0]:
-                    df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
+                # find tagline
+                tagline = soup.find("p")
+                if tagline:
+                    df.loc[i, "tagline"] = tagline.get_text(strip=True)
+                # find date
                 #date = soup.find(class_ = "artPgDate")
                 #if date:
                     #df.iloc[i, 'date'] = date.get_text()
@@ -299,17 +308,32 @@ class Parser():
 #--------------------------------------------------------------------------------------------------        
 
     def parse_jpost(self, df):
+        counter = 0
         df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
-            response = requests.get(link)
+        df = df.reset_index(drop=True)
+        base_url = "https://www.jpost.com"
+        # Iterate over all rows in the DataFrame
+        for i, row in df.iterrows():
+            link = row.get('hrefs', None)
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
+            # Convert relative URLs to absolute
+            full_link = urljoin(base_url, str(link))
+            # Fetch the page content
+            response = requests.get(full_link)
             if response.status_code == 200:
+                counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
+                # find header
                 header = soup.find("h1")
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                # find tagline
                 tagline = soup.find("h2")
                 if tagline:
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
+                # find date
                 date = soup.find(class_ = "updated-date-date")
                 if date:
                     df.iloc[i, 'date'] = date.get_text()
@@ -324,7 +348,7 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-
+"""
     def parse_aljazeera(self, df):
         counter = 0
         df = self.create_columns(df)
