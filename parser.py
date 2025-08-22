@@ -354,8 +354,16 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 """
     def parse_aljazeera(self, df):
+        counter = 0
         df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
+        df = df.reset_index(drop=True)
+        base_url = "https://www.aljazeera.com/"
+        df = self.create_columns(df)
+        for i, row in df.iterrows():
+            link = row.get('hrefs', None)
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
             response = requests.get(link)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -446,4 +454,3 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-"""
