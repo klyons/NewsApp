@@ -11,13 +11,12 @@ import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 # local libs
-from logger import get_logger
+from lib.logger import get_logger
 from parser import *
 from urllib.parse import urlparse
 
 #dictionary for all updated dataframes
 dataframes = {}
-
 
 
 log = get_logger(__name__)
@@ -125,66 +124,43 @@ if __name__ == '__main__':
     #df_bc = remove_duplicate(df_bc)
     #df_bc = text_blob(df_bc) 
     #df_bc = parser.parse_bbc(df_bc)
-    #
     
+    # MSNBC
     df_msnbc = parser.get_hrefs(sources['msnbc'])
-    #
-    #df_msnbc = valid_link(df_msnbc)
-    #df_msnbc = remove_duplicate(df_msnbc)
     df_msnbc = text_blob(df_msnbc)
     df_msnbc = parser.parse_msnbc(df_msnbc)
-    #
 
+    # CNN
     df_cnn = parser.get_hrefs(sources['cnn'])
-    #
-    #df_cnn = valid_link(df_cnn)
-    #df_cnn = remove_duplicate(df_cnn)
     df_cnn = text_blob(df_cnn) 
     df_cnn = parser.parse_cnn(df_cnn)
-    #
-    
+
+    # Fox News
     df_fn = parser.get_hrefs(sources['foxnews'])
-    #
-    #df_fn = valid_link(df_fn)
-    #df_fn = remove_duplicate(df_fn)
     df_fn = text_blob(df_fn) 
     df_fn = parser.parse_foxnews(df_fn)
     #
 
-
+    # Newsmax
     df_nm = parser.get_hrefs(sources['newsmax'])
-    #
-    #df_nm = valid_link(df_nm)
-    #df_nm = remove_duplicate(df_nm)
     df_nm = text_blob(df_nm) 
     df_nm = parser.parse_newsmax(df_nm)
-    #
 
-
+    # The Jerusalem Post
     df_jp = parser.get_hrefs(sources['jpost'])
-    #
-    #df_jp = valid_link(df_jp)
-    #df_jp = remove_duplicate(df_jp)
     df_jp = text_blob(df_jp) 
     df_jp = parser.parse_jpost(df_jp)
-    #
-    
 
+    # Al Jazeera
     df_al = parser.get_hrefs(sources['aljazeera'])
-    #
-    #df_al = valid_link(df_al)
-    #df_al = remove_duplicate(df_al)
     df_al = text_blob(df_al) 
     df_al = parser.parse_aljazeera(df_al)
-    #
-    
+
+    # Associated Press
     df_ap = parser.get_hrefs(sources['ap'])
-    #
-    #df_ap = valid_link(df_ap)
-    #df_ap = remove_duplicate(df_ap)
     df_ap = text_blob(df_ap) 
     df_ap = parser.parse_ap(df_ap)
-    #
+    
     
 
 
