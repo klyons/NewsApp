@@ -348,7 +348,7 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-"""
+
     def parse_aljazeera(self, df):
         counter = 0
         df = self.create_columns(df)
@@ -360,21 +360,22 @@ class Parser():
             # Skip empty, fragment, or mailto/javascript links
             if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
                 continue
+            pdb.set_trace()
             response = requests.get(link)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
-                header = soup.find(class_= 'breadcrumbs')
+                header = soup.find("h1")                
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
-                tagline = soup.find(class_ = 'article-subhead')
-                if tagline and hasattr(tagline, '__getitem__') and tagline[0]:
-                    em_tagline = tagline[0].find('em')
+                tagline = soup.find(class_ = 'article__subhead')
+                if tagline:
+                    em_tagline = tagline.find('em')
                     if em_tagline:
                         df.loc[i, "tagline"] = em_tagline.get_text(strip=True)
                 date = soup.find(class_ = "screen-reader-text")
                 if date:
                     df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/aljazeera.parquet', index=False)
+                # df.to_parquet('Data/aljazeera.parquet', index=False)
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/{base_url.split("//")[-1].split(".")[0]}.parquet'
@@ -387,8 +388,16 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 
     def parse_ap(self, df):
+        counter = 0
         df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
+        df = df.reset_index(drop=True)
+        base_url = "https://www.ap.com/"
+        df = self.create_columns(df)
+        for i, row in df.iterrows():
+            link = row.get('hrefs', None)
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
             response = requests.get(link)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
