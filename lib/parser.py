@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import validators
 from urllib.parse import urljoin
 import os
+from datetime import datetime
 
 #story parser
 class Parser():
@@ -73,6 +74,8 @@ class Parser():
                 date = soup.find(class_ = "dateline")
                 if date:
                     df.loc[i, 'date'] = date.get_text(strip=True)
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {full_link}, status code: {response.status_code}")
         parquet_path = f'Data/motherjones.parquet'
@@ -151,8 +154,9 @@ class Parser():
                 # find date
                 date = soup.find(class_ = "sc-2b5e3b35-2 fkLXLN")
                 if date:
-                    df.iloc[i, 'date'] = date.get_text()
-                #df.to_parquet('Data/bbc.parquet', index=False)
+                    df.loc[i, 'date'] = date.get_text()
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/bbc.parquet'
@@ -167,9 +171,8 @@ class Parser():
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------        
-
+    #no date - otherwise DONE
     def parse_cnn(self, df):
-        pdb.set_trace()
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -200,15 +203,15 @@ class Parser():
                     date = str_.split(",") if str_ else []
                     if len(date) >= 2:
                         date = date[-2] + date[-1]
-                        df.iloc[i, 'date'] = date
-                #df.to_parquet('Data/cnn.parquet', index=False)
+                        df.loc[i, 'date'] = date
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/cnn.parquet'
         if os.path.exists(parquet_path):
             existing_df = pd.read_parquet(parquet_path)
             combined_df = pd.concat([existing_df, df], ignore_index=True)
-            pdb.set_trace()
             combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
             combined_df = df
@@ -244,17 +247,18 @@ class Parser():
                 if tagline:
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
                 # find date
-                #date = soup.find(class_ = "article-date")
-                #if date:
-                    #df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/foxnews.parquet', index=False)
+                date = soup.find(class_ = "article-date")
+                if date:
+                    df.loc[i, 'date'] = date.get_text()
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/foxnews.parquet'
         if os.path.exists(parquet_path):
             existing_df = pd.read_parquet(parquet_path)
             combined_df = pd.concat([existing_df, df], ignore_index=True)
-            combined_df = combined_df.drop_duplicates(subset=['header', 'tagline'], keep='last')
+            combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
@@ -288,17 +292,18 @@ class Parser():
                 if tagline:
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
                 # find date
-                #date = soup.find(class_ = "artPgDate")
-                #if date:
-                    #df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/newsmax.parquet', index=False)
+                date = soup.find(class_ = "artPgDate")
+                if date:
+                    df.loc[i, 'date'] = date.get_text()
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/foxnews.parquet'
         if os.path.exists(parquet_path):
             existing_df = pd.read_parquet(parquet_path)
             combined_df = pd.concat([existing_df, df], ignore_index=True)
-            combined_df = combined_df.drop_duplicates(subset=['header', 'tagline'], keep='last')
+            combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
@@ -335,8 +340,9 @@ class Parser():
                 # find date
                 date = soup.find(class_ = "updated-date-date")
                 if date:
-                    df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/jpost.parquet', index=False)
+                    df.loc[i, 'date'] = date.get_text()
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/{base_url.split("//")[-1].split(".")[0]}.parquet'
@@ -368,18 +374,22 @@ class Parser():
             response = requests.get(link)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
+                # find header
                 header = soup.find(class_= 'breadcrumbs')
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                # find tagline
                 tagline = soup.find(class_ = 'article-subhead')
                 if tagline and hasattr(tagline, '__getitem__') and tagline[0]:
                     em_tagline = tagline[0].find('em')
                     if em_tagline:
                         df.loc[i, "tagline"] = em_tagline.get_text(strip=True)
                 date = soup.find(class_ = "screen-reader-text")
+                # find date
                 if date:
-                    df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/aljazeera.parquet', index=False)
+                    df.loc[i, 'date'] = date.get_text()
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/{base_url.split("//")[-1].split(".")[0]}.parquet'
@@ -392,22 +402,37 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------
     def parse_ap(self, df):
+        counter = 0
         df = self.create_columns(df)
-        for i, link in enumerate(df.iloc[0]):
-            response = requests.get(link)
+        df = df.reset_index(drop=True)
+        base_url = "https://apnews.com/"
+        # Iterate over all rows in the DataFrame
+        for i, row in df.iterrows():
+            link = row.get('hrefs', None)
+            # Skip empty, fragment, or mailto/javascript links
+            if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
+                continue
+            # Convert relative URLs to absolute
+            full_link = urljoin(base_url, str(link))
+            response = requests.get(full_link)
             if response.status_code == 200:
+                counter += 1
                 soup = BeautifulSoup(response.content, 'html.parser')
+                # find header
                 header = soup.find(class_ = 'Page-headline')
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
+                # find tagline
                 tagline = soup.find_all("p", class_ ='RichTextStoryBody RichTextStory')
                 if tagline[0]:
                     df.loc[i, "tagline"] = tagline[0].get_text(strip=True)
+                # find date
                 soup = soup.find('span', attrs={'data-date': ''})
                 date = soup.find("span")
                 if date:
-                    df.iloc[i, 'date'] = date.get_text()
-                df.to_parquet('Data/ap.parquet', index=False)
+                    df.loc[i, 'date'] = date.get_text()
+                else: 
+                    df.loc[i, 'date'] = str(datetime.now())
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
         parquet_path = f'Data/{base_url.split("//")[-1].split(".")[0]}.parquet'
@@ -418,7 +443,7 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-
+#--------------------------------------------------------------------------------------------------
     def parse_generic(self, df, base_url, header_tag, tagline_tag, date_class):
         df = self.create_columns(df)
         # Collect new rows in a list
@@ -441,7 +466,7 @@ class Parser():
                     df.loc[i, "tagline"] = tagline.get_text(strip=True)
                 date = soup.find(class_=date_class)
                 if date:
-                    df.iloc[i, 'date'] = date.get_text()
+                    df.loc[i, 'date'] = date.get_text()
                 new_rows.append(df.iloc[i])
             else:
                 print(f"Failed to fetch {link}, status code: {response.status_code}")
