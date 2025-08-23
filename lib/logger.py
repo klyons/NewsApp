@@ -2,6 +2,13 @@ import logging
 import sys
 from logging.handlers import RotatingFileHandler
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
 def setup_logger(name: str, log_file: str, level=logging.INFO):
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -25,6 +32,8 @@ def setup_logger(name: str, log_file: str, level=logging.INFO):
 
     return logger
 
+def get_logger(name):
+    return logging.getLogger(name)
 # Example usage
 '''
 logger = setup_logger("my_app", "app.log")
