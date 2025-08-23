@@ -10,11 +10,17 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+# local libs
+from logger import get_logger
 from parser import *
 from urllib.parse import urlparse
 
 #dictionary for all updated dataframes
 dataframes = {}
+
+
+
+log = get_logger(__name__)
 
 def find_links(domain):
     # Send a GET request
