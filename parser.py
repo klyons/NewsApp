@@ -304,7 +304,7 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 
 #--------------------------------------------------------------------------------------------------        
-
+    # no date - otherwise DONE
     def parse_jpost(self, df):
         pdb.set_trace()
         counter = 0
@@ -352,7 +352,8 @@ class Parser():
             combined_df = df
         pdb.set_trace()
         combined_df.to_parquet(parquet_path, index=False)
-"""
+
+#--------------------------------------------------------------------------------------------------
     def parse_aljazeera(self, df):
         counter = 0
         df = self.create_columns(df)
@@ -389,7 +390,7 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-
+#--------------------------------------------------------------------------------------------------
     def parse_ap(self, df):
         df = self.create_columns(df)
         for i, link in enumerate(df.iloc[0]):
