@@ -105,12 +105,12 @@ if __name__ == '__main__':
  
     # Parse and process links from Mother Jones
     # This will extract and process hyperlinks from the Mother Jones dataframe
-    #df_mj = parser.get_hrefs(sources['motherjones'])
+    df_mj = parser.get_hrefs(sources['motherjones'])
     #
     #df_mj = valid_link(df_mj)
     #df_mj = remove_duplicate(df_mj)
-    #df_mj = text_blob(df_mj) 
-    #df_mj = parser.parse_motherjones(df_mj)
+    df_mj = text_blob(df_mj) 
+    df_mj = parser.parse_motherjones(df_mj)
     #
 
     #df_bc = parser.get_hrefs(sources['bbc'])
@@ -121,41 +121,39 @@ if __name__ == '__main__':
     #df_bc = parser.parse_bbc(df_bc)
     #
     
-    #df_msnbc = parser.get_hrefs(sources['msnbc'])
-    #pdb.set_trace()
+    df_msnbc = parser.get_hrefs(sources['msnbc'])
     #
     #df_msnbc = valid_link(df_msnbc)
     #df_msnbc = remove_duplicate(df_msnbc)
-    #df_msnbc = text_blob(df_msnbc)
-    #df_msnbc = parser.parse_msnbc(df_msnbc)
+    df_msnbc = text_blob(df_msnbc)
+    df_msnbc = parser.parse_msnbc(df_msnbc)
     #
 
-    #df_cnn = parser.get_hrefs(sources['cnn'])
+    df_cnn = parser.get_hrefs(sources['cnn'])
     #
     #df_cnn = valid_link(df_cnn)
     #df_cnn = remove_duplicate(df_cnn)
-    #df_cnn = text_blob(df_cnn) 
-    #df_cnn = parser.parse_cnn(df_cnn)
+    df_cnn = text_blob(df_cnn) 
+    df_cnn = parser.parse_cnn(df_cnn)
     #
     
-    #df_fn = parser.get_hrefs(sources['foxnews'])
+    df_fn = parser.get_hrefs(sources['foxnews'])
     #
     #df_fn = valid_link(df_fn)
     #df_fn = remove_duplicate(df_fn)
-    #df_fn = text_blob(df_fn) 
-    #df_fn = parser.parse_foxnews(df_fn)
+    df_fn = text_blob(df_fn) 
+    df_fn = parser.parse_foxnews(df_fn)
     #
 
-    #------------------------------------------------------------------------------
+
     df_nm = parser.get_hrefs(sources['newsmax'])
-    pdb.set_trace()
     #
     #df_nm = valid_link(df_nm)
     #df_nm = remove_duplicate(df_nm)
     df_nm = text_blob(df_nm) 
     df_nm = parser.parse_newsmax(df_nm)
     #
-   #------------------------------------------------------------------------------
+
 
     df_jp = parser.get_hrefs(sources['jpost'])
     #
@@ -165,6 +163,7 @@ if __name__ == '__main__':
     df_jp = parser.parse_jpost(df_jp)
     #
     
+
     df_al = parser.get_hrefs(sources['aljazeera'])
     #
     #df_al = valid_link(df_al)

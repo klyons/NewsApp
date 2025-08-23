@@ -261,7 +261,6 @@ class Parser():
 #--------------------------------------------------------------------------------------------------
     #no date - otherwise DONE
     def parse_newsmax(self, df):
-        pdb.set_trace()
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -302,12 +301,12 @@ class Parser():
             combined_df = combined_df.drop_duplicates(subset=['header', 'tagline'], keep='last')
         else:
             combined_df = df
-        pdb.set_trace()
         combined_df.to_parquet(parquet_path, index=False)
 
 #--------------------------------------------------------------------------------------------------        
-
+    # no date - otherwise DONE
     def parse_jpost(self, df):
+        pdb.set_trace()
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -344,11 +343,17 @@ class Parser():
         if os.path.exists(parquet_path):
             existing_df = pd.read_parquet(parquet_path)
             combined_df = pd.concat([existing_df, df], ignore_index=True)
+            # Ensure required columns exist before dropping duplicates
+            for col in ['header', 'tagline', 'date']:
+                if col not in combined_df.columns:
+                    combined_df[col] = ""
             combined_df = combined_df.drop_duplicates(subset=['header', 'tagline', 'date'], keep='last')
         else:
             combined_df = df
+        pdb.set_trace()
         combined_df.to_parquet(parquet_path, index=False)
 
+#--------------------------------------------------------------------------------------------------
     def parse_aljazeera(self, df):
         counter = 0
         df = self.create_columns(df)
@@ -386,7 +391,7 @@ class Parser():
         else:
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
-
+#--------------------------------------------------------------------------------------------------
     def parse_ap(self, df):
         counter = 0
         df = self.create_columns(df)
