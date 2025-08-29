@@ -13,7 +13,7 @@ import requests
 import pandas as pd
 from textblob import TextBlob
 from bs4 import BeautifulSoup
-from parser import Parser
+from lib.parser import Parser
 
 # Set up logging
 logging.basicConfig(
