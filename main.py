@@ -11,11 +11,16 @@ import pandas as pd
 import pdb
 from textblob import TextBlob
 from bs4 import BeautifulSoup
-from lib.parser import *
+# local libs
+from lib.logger import get_logger
+from parser import *
 from urllib.parse import urlparse
 
 #dictionary for all updated dataframes
 dataframes = {}
+
+
+log = get_logger(__name__)
 
 #finding all the links on a webpage
 def find_links(domain):
@@ -97,47 +102,41 @@ if __name__ == '__main__':
     #df_bc = parser.get_hrefs(sources['bbc'])
     #df_bc = text_blob(df_bc) 
     #df_bc = parser.parse_bbc(df_bc)
-    #
     
-    #msnbc
+    # MSNBC
     df_msnbc = parser.get_hrefs(sources['msnbc'])
     df_msnbc = text_blob(df_msnbc)
     df_msnbc = parser.parse_msnbc(df_msnbc)
-    #
 
-    #cnn
+    # CNN
     df_cnn = parser.get_hrefs(sources['cnn'])
     df_cnn = text_blob(df_cnn) 
     df_cnn = parser.parse_cnn(df_cnn)
-    #
-    
-    #foxnews
+
+    # Fox News
     df_fn = parser.get_hrefs(sources['foxnews'])
     df_fn = text_blob(df_fn) 
     df_fn = parser.parse_foxnews(df_fn)
     #
 
-    #newsmax
+    # Newsmax
     df_nm = parser.get_hrefs(sources['newsmax'])
     df_nm = text_blob(df_nm) 
     df_nm = parser.parse_newsmax(df_nm)
-    #
 
-    #jpost
+    # The Jerusalem Post
     df_jp = parser.get_hrefs(sources['jpost'])
     df_jp = text_blob(df_jp) 
     df_jp = parser.parse_jpost(df_jp)
-    #
-    
-    #aljazeera
+
+    # Al Jazeera
     df_al = parser.get_hrefs(sources['aljazeera'])
     df_al = text_blob(df_al) 
     df_al = parser.parse_aljazeera(df_al)
-    #
-    
-    #ap
+
+    # Associated Press
     df_ap = parser.get_hrefs(sources['ap'])
     df_ap = text_blob(df_ap) 
     df_ap = parser.parse_ap(df_ap)
-    #
+    
     

@@ -371,6 +371,7 @@ class Parser():
             # Skip empty, fragment, or mailto/javascript links
             if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
                 continue
+            pdb.set_trace()
             response = requests.get(link)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -378,10 +379,9 @@ class Parser():
                 header = soup.find(class_= 'breadcrumbs')
                 if header:
                     df.loc[i, "header"] = header.get_text(strip=True)
-                # find tagline
-                tagline = soup.find(class_ = 'article-subhead')
-                if tagline and hasattr(tagline, '__getitem__') and tagline[0]:
-                    em_tagline = tagline[0].find('em')
+                tagline = soup.find(class_ = 'article__subhead')
+                if tagline:
+                    em_tagline = tagline.find('em')
                     if em_tagline:
                         df.loc[i, "tagline"] = em_tagline.get_text(strip=True)
                 date = soup.find(class_ = "screen-reader-text")
@@ -402,6 +402,10 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------
     def parse_ap(self, df):
+        counter = 0
+        df = self.create_columns(df)
+        df = df.reset_index(drop=True)
+        base_url = "https://www.ap.com/"
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
