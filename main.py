@@ -13,7 +13,7 @@ from textblob import TextBlob
 from bs4 import BeautifulSoup
 # local libs
 from lib.logger import get_logger
-from parser import *
+from lib.parser import *
 from urllib.parse import urlparse
 
 #dictionary for all updated dataframes
