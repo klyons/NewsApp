@@ -83,3 +83,44 @@ def plot_headline_3d_scatter(cosine_matrix, semantic_matrix, labels, sources):
     ax.legend(handles=handles, title="Sources")
     
     plt.show()
+
+
+def plot_headline_3d_scatter_list(cosine_list, semantic_list, sentiment_list, labels):
+    """
+    Plots a 3D scatter where:
+      - X = cosine similarity (list of values)
+      - Y = semantic similarity (list of values)
+      - Z = sentiment score (list of values, e.g. -1 = negative, 0 = neutral, 1 = positive)
+    
+    Arguments:
+      cosine_list: list of cosine similarity values (flattened pairs)
+      semantic_list: list of semantic similarity values (flattened pairs)
+      sentiment_list: list of sentiment scores for each pair (same length as cosine_list)
+      labels: list of label pairs, e.g. ["A ↔ B", "A ↔ C", ...]
+    """
+    
+    # Convert to numpy
+    x_vals = np.array(cosine_list)
+    y_vals = np.array(semantic_list)
+    z_vals = np.array(sentiment_list)
+
+    # Plot
+    fig = plt.figure(figsize=(9,7))
+    ax = fig.add_subplot(111, projection='3d')
+    
+    scatter = ax.scatter(x_vals, y_vals, z_vals, c=z_vals, cmap='coolwarm', s=80)
+    
+    # Add labels for each point
+    for i, txt in enumerate(labels):
+        ax.text(x_vals[i], y_vals[i], z_vals[i], txt, fontsize=8)
+    
+    ax.set_xlabel("Cosine Similarity")
+    ax.set_ylabel("Semantic Similarity")
+    ax.set_zlabel("Sentiment Score")
+    ax.set_title("Cosine vs Semantic Similarity vs Sentiment")
+    
+    # Add colorbar for sentiment interpretation
+    cbar = fig.colorbar(scatter, ax=ax, shrink=0.6)
+    cbar.set_label("Sentiment Score")
+    
+    plt.show()
