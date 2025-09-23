@@ -71,7 +71,7 @@ def semantic_analysis_args(model, *args):
 	for i in range(len(args_list)):
 		hl = args_list[:i] + args_list[i+1:]
 		hl = " ".join(hl)
-		similarities.append(semantic_analysis(args[i], hl, model))
+		similarities.append(semantic_analysis(args_list[i], hl, model))
 
 	return similarities
 

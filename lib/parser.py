@@ -371,7 +371,6 @@ class Parser():
             # Skip empty, fragment, or mailto/javascript links
             if not link or str(link).startswith('#') or str(link).startswith('mailto:') or str(link).startswith('javascript:'):
                 continue
-            pdb.set_trace()
             response = requests.get(link)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.content, 'html.parser')
