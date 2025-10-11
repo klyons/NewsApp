@@ -1,5 +1,5 @@
 import nltk
-nltk.download('vader_lexicon')
+#nltk.download()
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity 
@@ -8,8 +8,7 @@ from plot_functions import *
 from textblob import TextBlob
 import pdb
 
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Two headlines to compare
 headline1 = "Trump signs executive order rebranding Pentagon as the Department of War"
@@ -123,8 +122,6 @@ scores = analyzer.polarity_scores(text)
 print(scores)
 """
 
-
-nltk.download('vader_lexicon')
 analyzer = SentimentIntensityAnalyzer()
 
 def sentiment_analysis(*args):
@@ -160,4 +157,4 @@ print(f"Matrix Semantic: {semantic}")
 #plot_similarity_network(semantic, labels, "Semantic", threshold=0.2)
 #plot_headline_3d_scatter(cosine, semantic, labels, sources)
 pdb.set_trace()
-plot_headline_3d_scatter_list(cosine2, semantic2, sentiment, labels)
+plot_headline_3d_scatter_list(cosine2, semantic2, sentiment, sources)

@@ -117,7 +117,7 @@ def plot_headline_3d_scatter_list(cosine_list, semantic_list, sentiment_list, la
     ax.set_xlabel("Cosine Similarity")
     ax.set_ylabel("Semantic Similarity")
     ax.set_zlabel("Sentiment Score")
-    ax.set_title("Cosine vs Semantic Similarity vs Sentiment")
+    ax.set_title("Cosine vs Semantic  vs Sentiment")
     
     # Add colorbar for sentiment interpretation
     cbar = fig.colorbar(scatter, ax=ax, shrink=0.6)
