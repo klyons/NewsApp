@@ -4,25 +4,38 @@ import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity 
 from sentence_transformers import SentenceTransformer, util
+import torch
 from plot_functions import *
 from textblob import TextBlob
 import pdb
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from scipy.special import softmax
 
 # Two headlines to compare
 headline1 = "Trump signs executive order rebranding Pentagon as the Department of War"
 headline2 = "Trump changes the Department of Defense’s name to ‘Department of War’"
 headline3 = "Mystery of former Federal Reserve Governor Kugler’s resignation deepens as real estate records raise new questions"
-headline4 = "Who is Tyler Robinson? What we know about Charlie Kirk's suspected assassin" #fox
-headline5 = "What we know about Charlie Kirk shooting suspect Tyler Robinson" #cnn
-headline6 = "Who is Tyler Robinson, the suspect in Charlie Kirk's murder?" #jpost
-headline7 = "Charlie Kirk Shooting Suspect ID'd as Tyler Robinson, 22" #newsmax
-headline8 = "'Smart, quiet': 22-year-old suspect held over killing Charlie Kirk" #aljazeera
-headline9 = "Who is Tyler Robinson, the suspect in custody for shooting Charlie Kirk?" #bbc
+
+charlie_kirk = {
+	"foxnews": "Who is Tyler Robinson? What we know about Charlie Kirk's suspected assassin",
+	"cnn": "What we know about Charlie Kirk shooting suspect Tyler Robinson",
+	"jpost": "Who is Tyler Robinson, the suspect in Charlie Kirk's murder?",
+	"newsmax": "Charlie Kirk Shooting Suspect ID'd as Tyler Robinson, 22",
+	"aljazeera": "'Smart, quiet': 22-year-old suspect held over killing Charlie Kirk",
+	"bbc": "Who is Tyler Robinson, the suspect in custody for shooting Charlie Kirk?"
+}	
+
+
 
 #for semantic similarities
 model = SentenceTransformer('all-MiniLM-L6-v2')
+
+
+MODEL = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+tokenizer = AutoTokenizer.from_pretrained(MODEL)
+sentiment_model = AutoModelForSequenceClassification.from_pretrained(MODEL)
 
 # 1 - very similar, 0 - not similar at all
 # looks at the direct words themselves
@@ -35,26 +48,25 @@ def cosine_analysis(h1, h2):
 	return similarity[0][0]
 
 def cosine_analysis_args(*args):
+	args = args[0]
 	"""
-	Takes in any number of text inputs and returns a flattened list
-	of pairwise cosine similarities (upper triangle, no duplicates).
-	"""
-	#vectorizer = TfidfVectorizer()
-	#tfidf_matrix = vectorizer.fit_transform(args)
+    For each headline, computes its average cosine similarity against all other headlines.
+    Returns a list of floats (one per headline).
+    """
 
-	# Full similarity matrix
-	#similarity_matrix = cosine_similarity(tfidf_matrix)
+	embeddings = model.encode(args, convert_to_tensor=True, normalize_embeddings=True)
+	n = len(args)
+	avg_similarities = []
 
-	# Collect only upper triangle (i < j) so we don’t repeat
-	similarities = []
-	hl = []
-	args_list = list(args)
-	for i in range(len(args_list)):
-		hl = args_list[:i] + args_list[i+1:]
-		hl = " ".join(hl)
-		similarities.append(cosine_analysis(i, hl))
+	for i in range(n):
+		ref_emb = embeddings[i]
+		# Compare to all other embeddings
+		others = torch.cat([embeddings[:i], embeddings[i+1:]], dim=0)
+		scores = util.cos_sim(ref_emb, others)
+		avg_score = float(scores.mean())
+		avg_similarities.append(avg_score)
 
-	return similarities
+	return avg_similarities
 
 # 1 - very similar, 0 - not similar at all
 # looks at the meaning of the words
@@ -68,49 +80,47 @@ def semantic_analysis(h1, h2, model):
 	return similarity.item()
 
 def semantic_analysis_args(model, *args):
-
+	args = args[0]
 	# Collect only upper triangle (i < j) so we don’t repeat
 	similarities = []
 	hl = []
-	args_list = list(args)
-	for i in range(len(args_list)):
-		hl = args_list[:i] + args_list[i+1:]
+
+	for i in range(len(args)):
+		hl = args[:i] + args[i+1:]
 		hl = " ".join(hl)
-		similarities.append(semantic_analysis(args_list[i], hl, model))
+		similarities.append(semantic_analysis(args[i], hl, model))
 
 	return similarities
 
 def matrix_cosine(*args):
-	headlines = []
-
-	for a in args: 
-		headlines.append(a)
-
+	args = args[0]
+	pdb.set_trace()
 	vectorizer = TfidfVectorizer()
-	tfidf_matrix = vectorizer.fit_transform(headlines)
+	tfidf_matrix = vectorizer.fit_transform(args)
 
 	similarities = cosine_similarity(tfidf_matrix)	
 	return similarities
 
 def matrix_semantic(*args):
-    """
-    Computes a semantic similarity matrix for any number of headlines.
+	args = args[0]
+	"""
+	Computes a semantic similarity matrix for any number of headlines.
+
+	Returns: NxN numpy array, where N = number of headlines
+	"""
+	model = SentenceTransformer('all-MiniLM-L6-v2')
+	n = len(args)
+	matrix = np.zeros((n, n))
+
+	# Compute pairwise similarities
+	for i in range(n):
+		for j in range(n):
+			if i == j:
+				matrix[i, j] = 1.0
+			else:
+				matrix[i, j] = semantic_analysis(args[i], args[j], model)
     
-    Returns: NxN numpy array, where N = number of headlines
-    """
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    n = len(args)
-    matrix = np.zeros((n, n))
-    
-    # Compute pairwise similarities
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                matrix[i, j] = 1.0
-            else:
-                matrix[i, j] = semantic_analysis(args[i], args[j], model)
-    
-    return matrix
+	return matrix
 
 
 """
@@ -124,7 +134,8 @@ print(scores)
 
 analyzer = SentimentIntensityAnalyzer()
 
-def sentiment_analysis(*args):
+def sentiment_analysis_vader(*args):
+	args = args[0]
 	sentiment_list = []
 	for a in args:
 		text = a
@@ -133,14 +144,31 @@ def sentiment_analysis(*args):
 		sentiment_list.append(scores['compound'])
 	return sentiment_list
 
-		
-cosine = matrix_cosine(headline4, headline5, headline6, headline7, headline8, headline9)
-cosine2 = cosine_analysis_args(headline4, headline5, headline6, headline7, headline8, headline9)
+def sentiment_analysis(*args):
+	args = args[0]
+	sentiment_list = []
+	for a in args:
+		# Tokenize text
+		encoded = tokenizer(a, return_tensors='pt')  
+		# Get model output
+		output = sentiment_model(**encoded)                   
+		# Convert logits → probabilities
+		scores = output.logits[0].detach().numpy()
+		probs = softmax(scores)
+		# Compute a single compound-like score
+		compound = float(probs[2] - probs[0])
+		sentiment_list.append(compound)
+	return sentiment_list
 
-semantic = matrix_semantic(headline4, headline5, headline6, headline7, headline8, headline9)
-semantic2 = semantic_analysis_args(model, headline4, headline5, headline6, headline7, headline8, headline9)
+headlines = list(charlie_kirk.values())
 
-sentiment = sentiment_analysis(headline4, headline5, headline6, headline7, headline8, headline9)
+cosine = matrix_cosine(headlines)
+cosine2 = cosine_analysis_args(headlines)
+
+semantic = matrix_semantic(headlines)
+semantic2 = semantic_analysis_args(model, headlines)
+
+sentiment = sentiment_analysis(headlines)
 
 sources = ['foxnews', 'cnn', 'jpost', 'newsmax', 'aljazeera', 'bbc']
 labels = ["h4", "h5", "h6", "h7", "h8", "h9"]
@@ -156,5 +184,6 @@ print(f"Matrix Semantic: {semantic}")
 #plot_similarity_heatmap(semantic, sources, "Semantic")
 #plot_similarity_network(semantic, labels, "Semantic", threshold=0.2)
 #plot_headline_3d_scatter(cosine, semantic, labels, sources)
+
 pdb.set_trace()
 plot_headline_3d_scatter_list(cosine2, semantic2, sentiment, sources)
