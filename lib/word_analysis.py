@@ -27,7 +27,15 @@ charlie_kirk = {
 	"bbc": "Who is Tyler Robinson, the suspect in custody for shooting Charlie Kirk?"
 }	
 
+gov_shutdown = {
+	"foxnews": "Substantial federal layoffs have begun amid government shutdown",
+	"cnn": "Trump administration lays off thousands of federal workers during government shutdown",
+	"jpost": "US State Department to fire over 1,300 employees as Trump admin. aims to shrink federal gov't",
+	"newsmax": "Union Implores Judge to Hit Brakes on Spate of Government Layoffs",
+	"aljazeera": "Trump announces layoffs amid government shutdown, despite legal questions.",
+	"bbc": "Trump administration starts laying off thousands of workers."
 
+}
 
 #for semantic similarities
 model = SentenceTransformer('all-MiniLM-L6-v2')
