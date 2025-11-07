@@ -103,7 +103,7 @@ def plot_headline_3d_scatter_list(cosine_list, semantic_list, sentiment_list, la
     x_vals = np.array(cosine_list)
     y_vals = np.array(semantic_list)
     z_vals = np.array(sentiment_list)
-
+    
     # Plot
     fig = plt.figure(figsize=(9,7))
     ax = fig.add_subplot(111, projection='3d')

@@ -12,3 +12,5 @@ feeds = {
 
 #https://about.fb.com/wp-content/uploads/2016/05/rss-urls-1.pdf
 #https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml
+
+#environmental variable (api)
