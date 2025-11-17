@@ -2,6 +2,7 @@
 
 import streamlit as st
 import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import random
@@ -10,6 +11,9 @@ import requests
 import math
 from textblob import TextBlob
 from bs4 import BeautifulSoup
+import pdb
+
+matplotlib.use('MacOSX')
 
 def analyze_sent(url):
     #response = requests.get(url)
@@ -103,46 +107,56 @@ def read_csv_file(file_path):
 
 
 
-def wordcloud_gen(name):
+def wordcloud_gen(url):
 	#df = pd.read_csv(name) #name needs to be a string
 	#text = " ".join(title for title in df.Title)
 	#df.head()
-     
-	stopwords = set(STOPWORDS)
+    
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
 
-	for val in name:
+    text = soup.get_text()
+    cleaned = text.replace('\n', '').replace('\t','')
+    pdb.set_trace()
+
+    stopwords = set(STOPWORDS)
+    """
+    for val in cleaned:
      
     	# typecaste each val to string
-		val = str(val)
+        val = str(val)
  
-    	# split the value
-		tokens = val.split()
-     
+    	# split the value  
+        tokens = val.split()
+        pdb.set_trace()
     	# Converts each token into lowercase
-		for i in range(len(tokens)):
-			tokens[i] = tokens[i].lower()
+        for i in range(len(tokens)):
+            tokens[i] = tokens[i].lower()3
      
-		comment_words += " ".join(tokens)+" "
- 
-	wordcloud = WordCloud(width = 800, height = 800,
-                	background_color ='white',
-                	stopwords = stopwords,
-                	min_font_size = 10).generate(comment_words)
-     
-	file = read_csv_file("/Users/sirikelshikar/workspace/NewsApp/text.csv")
+        comment_words = " ".join(tokens)+" "
+    """
+    wordcloud = WordCloud(width = 800, height = 800,
+                    background_color ='white',
+                    stopwords = stopwords,
+                    min_font_size = 10).generate(cleaned)
+        
+    #file = read_csv_file("/Users/sirikelshikar/workspace/NewsApp/text.csv")
 
-	plt = wordcloud_gen(file)
-	plt.figure(figsize = (8, 8), facecolor = None)
-	plt.imshow(wordcloud)
-	plt.axis("off")
-	plt.tight_layout(pad = 0)
+    #plt = wordcloud_gen(file)
 
-	plt.show()
-	return wordcloud
+    plt.figure(figsize = (8, 8), facecolor = None)
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.tight_layout(pad = 0)
+
+    plt.show()
+    return wordcloud
 
 
 def main():
     text_on_screen()
+    wordcloud_gen("https://www.motherjones.com/politics/2025/11/kash-patel-the-fbis-agent-of-chaos/")
+
 
 if __name__ == "__main__":
       main()
