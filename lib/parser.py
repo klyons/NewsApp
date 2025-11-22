@@ -7,20 +7,21 @@ import validators
 from urllib.parse import urljoin
 import os
 from datetime import datetime
+from typing import Any
 
 #story parser
 class Parser():
-    def __init__(self):
+    def __init__(self) -> None:
         self.print = False
 
-    def create_columns(self, df):
+    def create_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         if "header" not in df.columns:
             df["header"] = ""
         if "tagline" not in df.columns:
             df["tagline"] = ""
         return df
 
-    def get_hrefs(self, address):
+    def get_hrefs(self, address: str) -> pd.DataFrame:
         hrefs = []
         response = requests.get(address)
         if response.status_code == 200:
@@ -41,7 +42,7 @@ class Parser():
         return pd.DataFrame(hrefs, columns=["hrefs"])
 #--------------------------------------------------------------------------------------------------
     #fix header & tagline - otherwise DONE
-    def parse_motherjones(self, df):
+    def parse_motherjones(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -126,7 +127,7 @@ class Parser():
 #         pdb.set_trace()
 #--------------------------------------------------------------------------------------------------
     #fix header & tagline & date - otherwise DONE  
-    def parse_msnbc(self, df):
+    def parse_msnbc(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -172,7 +173,7 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------        
     #no date - otherwise DONE
-    def parse_cnn(self, df):
+    def parse_cnn(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -219,7 +220,7 @@ class Parser():
 
 #--------------------------------------------------------------------------------------------------
     #no date - otherwise DONE 
-    def parse_foxnews(self, df):
+    def parse_foxnews(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -264,7 +265,7 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------
     #no date - otherwise DONE
-    def parse_newsmax(self, df):
+    def parse_newsmax(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -310,7 +311,7 @@ class Parser():
 
 #--------------------------------------------------------------------------------------------------        
     # no date - otherwise DONE
-    def parse_jpost(self, df):
+    def parse_jpost(self, df: pd.DataFrame) -> None:
         pdb.set_trace()
         counter = 0
         df = self.create_columns(df)
@@ -360,7 +361,7 @@ class Parser():
         combined_df.to_parquet(parquet_path, index=False)
 
 #--------------------------------------------------------------------------------------------------
-    def parse_aljazeera(self, df):
+    def parse_aljazeera(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -400,7 +401,7 @@ class Parser():
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------
-    def parse_ap(self, df):
+    def parse_ap(self, df: pd.DataFrame) -> None:
         counter = 0
         df = self.create_columns(df)
         df = df.reset_index(drop=True)
@@ -447,7 +448,7 @@ class Parser():
             combined_df = df
         combined_df.to_parquet(parquet_path, index=False)
 #--------------------------------------------------------------------------------------------------
-    def parse_generic(self, df, base_url, header_tag, tagline_tag, date_class):
+    def parse_generic(self, df: pd.DataFrame, base_url: str, header_tag: Any, tagline_tag: Any, date_class: Any) -> None:
         df = self.create_columns(df)
         # Collect new rows in a list
         new_rows = []

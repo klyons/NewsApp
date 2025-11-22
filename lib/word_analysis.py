@@ -167,8 +167,8 @@ def sentiment_analysis(*args):
 		compound = float(probs[2] - probs[0])
 		sentiment_list.append(compound)
 	return sentiment_list
-
-headlines = list(charlie_kirk.values())
+s
+headlines = list(gov_shutdown.values())
 
 cosine = matrix_cosine(headlines)
 cosine2 = cosine_analysis_args(headlines)

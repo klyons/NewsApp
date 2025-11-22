@@ -1,0 +1,15 @@
+# You can move this file to ~/.config/tmuxinator/NewsApp.yml
+name: NewsApp
+root: .
+
+windows:
+  - main:
+      # This layout gives a large top pane and two smaller bottom panes.
+      # It is the closest standard layout to your request.
+      # Once inside tmux, you can press (prefix + space) to cycle 
+      # through other layouts to find one that fits your needs perfectly.
+      layout: main-vertical
+      panes:
+        - # This will be the large top pane.
+        - # This will be a bottom-left pane.
+        - # This will be a bottom-right pane.
