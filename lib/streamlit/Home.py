@@ -1,6 +1,7 @@
 #https://blog.streamlit.io/langchain-streamlit/
 
 import streamlit as st
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 import pandas as pd
@@ -65,24 +66,15 @@ def slider(url):
 
 def text_on_screen(): 
     #title
-	st.markdown("<style>h1{text-align: center;}</style>", unsafe_allow_html=True)
-	st.title("Welcome to _:violet[Newsapp]_!")
+    st.markdown("<style>h1{text-align: center;}</style>", unsafe_allow_html=True)
+    st.title("Welcome to _:violet[Newsapp]_!")
+    
       
     #url text box
-	given_url = st.text_area("Please provide the URL you are analyzing").strip()
+    given_url = st.text_area("Please provide the URL you are analyzing").strip()
       
-	if st.button("Submit") and len(given_url) > 0:
-		slider(given_url)
-
-
-
-
-
-
-
-
-
-
+    if st.button("Submit") and len(given_url) > 0:
+        slider(given_url)
 
 
 def read_csv_file(file_path):
@@ -105,12 +97,10 @@ def read_csv_file(file_path):
     return data
 
 
-
-
 def wordcloud_gen(url):
-	#df = pd.read_csv(name) #name needs to be a string
-	#text = " ".join(title for title in df.Title)
-	#df.head()
+    #df = pd.read_csv(name) #name needs to be a string
+    #text = " ".join(title for title in df.Title)
+    #df.head()
     
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
@@ -123,13 +113,13 @@ def wordcloud_gen(url):
     """
     for val in cleaned:
      
-    	# typecaste each val to string
+        # typecaste each val to string
         val = str(val)
  
-    	# split the value  
+        # split the value  
         tokens = val.split()
         pdb.set_trace()
-    	# Converts each token into lowercase
+        # Converts each token into lowercase
         for i in range(len(tokens)):
             tokens[i] = tokens[i].lower()3
      
@@ -155,7 +145,7 @@ def wordcloud_gen(url):
 
 def main():
     text_on_screen()
-    wordcloud_gen("https://www.motherjones.com/politics/2025/11/kash-patel-the-fbis-agent-of-chaos/")
+    #wordcloud_gen("https://www.motherjones.com/politics/2025/11/kash-patel-the-fbis-agent-of-chaos/")
 
 
 if __name__ == "__main__":
