@@ -167,7 +167,7 @@ def sentiment_analysis(*args):
 		compound = float(probs[2] - probs[0])
 		sentiment_list.append(compound)
 	return sentiment_list
-s
+
 headlines = list(gov_shutdown.values())
 
 cosine = matrix_cosine(headlines)

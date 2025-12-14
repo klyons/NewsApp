@@ -13,6 +13,9 @@ import math
 from textblob import TextBlob
 from bs4 import BeautifulSoup
 import pdb
+from PyPDF2 import PdfReader
+from io import BytesIO
+
 
 matplotlib.use('MacOSX')
 
@@ -96,35 +99,55 @@ def read_csv_file(file_path):
          return None
     return data
 
+def pdf_url_to_string(url):
+    response = requests.get(url)
+    response.raise_for_status()  # ensure download worked
+    reader = PdfReader(BytesIO(response.content))
+    return " ".join(page.extract_text() for page in reader.pages if page.extract_text())
 
-def wordcloud_gen(url):
+
+
+
+def wordcloud_gen(url, type):
     #df = pd.read_csv(name) #name needs to be a string
     #text = " ".join(title for title in df.Title)
     #df.head()
     
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
 
-    text = soup.get_text()
-    cleaned = text.replace('\n', '').replace('\t','')
-    pdb.set_trace()
+    if type == "pdf":
+        response = requests.get(url)
+        cleaned = pdf_url_to_string(url)
 
-    stopwords = set(STOPWORDS)
-    """
-    for val in cleaned:
-     
-        # typecaste each val to string
-        val = str(val)
- 
-        # split the value  
-        tokens = val.split()
+    elif type == "file":
+        with open(url, "r", encoding="utf-8") as f:
+            cleaned = f.read()
+            print(cleaned)
+
+    else:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        text = soup.get_text()
+        cleaned = text.replace('\n', '').replace('\t','')
         pdb.set_trace()
-        # Converts each token into lowercase
-        for i in range(len(tokens)):
-            tokens[i] = tokens[i].lower()3
-     
-        comment_words = " ".join(tokens)+" "
-    """
+
+        """
+        for val in cleaned:
+        
+            # typecaste each val to string
+            val = str(val)
+    
+            # split the value  
+            tokens = val.split()
+            pdb.set_trace()
+            # Converts each token into lowercase
+            for i in range(len(tokens)):
+                tokens[i] = tokens[i].lower()3
+        
+            comment_words = " ".join(tokens)+" "
+        """
+    
+    stopwords = set(STOPWORDS)
     wordcloud = WordCloud(width = 800, height = 800,
                     background_color ='white',
                     stopwords = stopwords,
@@ -144,8 +167,8 @@ def wordcloud_gen(url):
 
 
 def main():
-    text_on_screen()
-    #wordcloud_gen("https://www.motherjones.com/politics/2025/11/kash-patel-the-fbis-agent-of-chaos/")
+    #text_on_screen()
+    wordcloud_gen("house_12_12.txt", "file")
 
 
 if __name__ == "__main__":
