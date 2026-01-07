@@ -13,6 +13,9 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from scipy.special import softmax
 
+from collections import Counter
+import re
+
 # Two headlines to compare
 headline1 = "Trump signs executive order rebranding Pentagon as the Department of War"
 headline2 = "Trump changes the Department of Defense’s name to ‘Department of War’"
@@ -58,9 +61,9 @@ def cosine_analysis(h1, h2):
 def cosine_analysis_args(*args):
 	args = args[0]
 	"""
-    For each headline, computes its average cosine similarity against all other headlines.
-    Returns a list of floats (one per headline).
-    """
+	For each headline, computes its average cosine similarity against all other headlines.
+	Returns a list of floats (one per headline).
+	"""
 
 	embeddings = model.encode(args, convert_to_tensor=True, normalize_embeddings=True)
 	n = len(args)
@@ -127,7 +130,7 @@ def matrix_semantic(*args):
 				matrix[i, j] = 1.0
 			else:
 				matrix[i, j] = semantic_analysis(args[i], args[j], model)
-    
+	
 	return matrix
 
 
@@ -168,6 +171,32 @@ def sentiment_analysis(*args):
 		sentiment_list.append(compound)
 	return sentiment_list
 
+
+def word_counter(txt):
+	target_words = ["oil", "venezuelan", "venezuelans"]
+
+	pdb.set_trace()
+
+	with open(txt, "r", encoding="utf-8") as f:
+		text = str(f.read().lower())
+
+	words = re.findall(r'\b\w+\b', text.lower())
+
+	# count all words
+	counts = Counter(words)
+	# print counts for target words
+	#for word in target_words:
+		#print(word, counts[word])
+
+	values = [counts[word] for word in target_words]
+
+	plt.barh(target_words, values)
+	plt.title("Word Counts")
+	plt.xlabel("Frequency")
+	plt.ylabel("Words")
+	plt.show()
+
+
 headlines = list(gov_shutdown.values())
 
 cosine = matrix_cosine(headlines)
@@ -194,4 +223,6 @@ print(f"Matrix Semantic: {semantic}")
 #plot_headline_3d_scatter(cosine, semantic, labels, sources)
 
 pdb.set_trace()
-plot_headline_3d_scatter_list(cosine2, semantic2, sentiment, sources)
+#plot_headline_3d_scatter_list(cosine2, semantic2, sentiment, sources)
+
+word_counter("venez.txt")
